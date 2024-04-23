@@ -1,0 +1,63 @@
+<mxfile host="Electron" modified="2024-04-22T14:26:18.690Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/22.1.2 Chrome/114.0.5735.289 Electron/25.9.4 Safari/537.36" etag="Erbv0w6ZXesSVSi-wd2X" version="22.1.2" type="device">
+  <diagram name="Page-1" id="kLJhrOG31-JEbK-T8uVo">
+    <mxGraphModel dx="1208" dy="2280" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="mEnGyOM3R5gFECst4JD3-1" value="event-sourcing" style="shape=folder;fontStyle=1;tabWidth=110;tabHeight=30;tabPosition=left;html=1;boundedLbl=1;labelInHeader=1;container=1;collapsible=0;whiteSpace=wrap;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
+          <mxGeometry x="1070" y="-810" width="150" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="mEnGyOM3R5gFECst4JD3-2" value="For extracting events and restoring aggregates from events" style="html=1;strokeColor=none;resizeWidth=1;resizeHeight=1;fillColor=none;part=1;connectable=0;allowArrows=0;deletable=0;whiteSpace=wrap;" parent="mEnGyOM3R5gFECst4JD3-1" vertex="1">
+          <mxGeometry width="150" height="70" relative="1" as="geometry">
+            <mxPoint y="30" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mEnGyOM3R5gFECst4JD3-3" value="event-store" style="shape=folder;fontStyle=1;tabWidth=110;tabHeight=30;tabPosition=left;html=1;boundedLbl=1;labelInHeader=1;container=1;collapsible=0;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" parent="1" vertex="1">
+          <mxGeometry x="1180" y="-1010" width="150" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="mEnGyOM3R5gFECst4JD3-4" value="Abstraction for storing events in different stores." style="html=1;strokeColor=none;resizeWidth=1;resizeHeight=1;fillColor=none;part=1;connectable=0;allowArrows=0;deletable=0;whiteSpace=wrap;" parent="mEnGyOM3R5gFECst4JD3-3" vertex="1">
+          <mxGeometry width="150" height="70" relative="1" as="geometry">
+            <mxPoint y="30" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mEnGyOM3R5gFECst4JD3-5" value="event-store-projections" style="shape=folder;fontStyle=1;tabWidth=110;tabHeight=30;tabPosition=left;html=1;boundedLbl=1;labelInHeader=1;container=1;collapsible=0;whiteSpace=wrap;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
+          <mxGeometry x="1330" y="-810" width="150" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="mEnGyOM3R5gFECst4JD3-6" value="Event Store Projections to build views." style="html=1;strokeColor=none;resizeWidth=1;resizeHeight=1;fillColor=none;part=1;connectable=0;allowArrows=0;deletable=0;whiteSpace=wrap;" parent="mEnGyOM3R5gFECst4JD3-5" vertex="1">
+          <mxGeometry width="150" height="70" relative="1" as="geometry">
+            <mxPoint y="30" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mEnGyOM3R5gFECst4JD3-7" value="snapshot-store" style="shape=folder;fontStyle=1;tabWidth=110;tabHeight=30;tabPosition=left;html=1;boundedLbl=1;labelInHeader=1;container=1;collapsible=0;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" parent="1" vertex="1">
+          <mxGeometry x="910" y="-1010" width="150" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="mEnGyOM3R5gFECst4JD3-8" value="Abstract for storing aggregates as a snapshot in different stores." style="html=1;strokeColor=none;resizeWidth=1;resizeHeight=1;fillColor=none;part=1;connectable=0;allowArrows=0;deletable=0;whiteSpace=wrap;" parent="mEnGyOM3R5gFECst4JD3-7" vertex="1">
+          <mxGeometry width="150" height="70" relative="1" as="geometry">
+            <mxPoint y="30" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mEnGyOM3R5gFECst4JD3-9" value="depends on" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0;exitDx=55;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;startArrow=none;startFill=0;dashed=1;endArrow=open;endFill=0;curved=1;" parent="1" source="mEnGyOM3R5gFECst4JD3-1" target="mEnGyOM3R5gFECst4JD3-7" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="mEnGyOM3R5gFECst4JD3-10" value="depends on" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0;exitDx=55;exitDy=0;exitPerimeter=0;startArrow=none;startFill=0;dashed=1;endArrow=open;endFill=0;curved=1;" parent="1" source="mEnGyOM3R5gFECst4JD3-1" target="mEnGyOM3R5gFECst4JD3-3" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1185" y="-790" as="sourcePoint" />
+            <mxPoint x="1070" y="-900" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mEnGyOM3R5gFECst4JD3-11" value="depends on" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0;exitDx=55;exitDy=0;exitPerimeter=0;startArrow=none;startFill=0;dashed=1;endArrow=open;endFill=0;curved=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="mEnGyOM3R5gFECst4JD3-5" target="mEnGyOM3R5gFECst4JD3-3" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1115" y="-750" as="sourcePoint" />
+            <mxPoint x="1265" y="-900" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mEnGyOM3R5gFECst4JD3-12" value="Package Dependency Diagram" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;width=200;height=40;fontStyle=1;strokeWidth=2;" parent="1" vertex="1">
+          <mxGeometry x="880" y="-1080" width="640" height="410" as="geometry" />
+        </mxCell>
+        <mxCell id="mEnGyOM3R5gFECst4JD3-13" value="Not yet implemented" style="shape=note;strokeWidth=2;fontSize=12;size=20;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#666600;" parent="1" vertex="1">
+          <mxGeometry x="1270" y="-740" width="100" height="50" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

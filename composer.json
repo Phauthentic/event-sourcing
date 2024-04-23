@@ -1,0 +1,81 @@
+{
+    "name": "phauthentic/event-sourcing",
+    "type": "library",
+    "description": "An event sourcing library for PHP. Framework agnostic, simple, SOLID and easy to use.",
+    "keywords": ["event-sourcing", "CQRS", "event-store", "snapshot-store", "SOLID"],
+    "license": "MIT",
+    "authors": [
+        {
+            "role": "Maintainer",
+            "name": "Florian Krämer"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "phauthentic/event-store": "dev-master",
+        "phauthentic/snapshot-store": "dev-master"
+    },
+    "require-dev": {
+        "ext-pdo": "*",
+        "phpmd/phpmd": "^2.15",
+        "phpro/grumphp-shim": "^2.5",
+        "phpstan/phpstan": "^1.10",
+        "phpunit/phpunit": "^9.6",
+        "ramsey/uuid": "^4.7",
+        "squizlabs/php_codesniffer": "^4.0",
+        "symfony/messenger": "^6.0||^7.0",
+        "symfony/var-dumper": "^6.0||^7.1",
+        "psr/container": "^1.0||^2.0",
+        "psr/log": "^2.0||^3.0"
+    },
+    "suggest": {
+        "psr/container": "If you want to use the repository factory.",
+        "psr/log": "If you want to use any of the components that use a PSR logger."
+    },
+    "autoload": {
+        "psr-4": {
+            "Phauthentic\\EventSourcing\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Phauthentic\\EventSourcing\\Test\\": "tests/",
+            "Example\\": "examples/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "sort-packages": true,
+        "bin-dir": "./bin",
+        "allow-plugins": {
+            "phpro/grumphp-shim": true
+        }
+    },
+    "scripts": {
+        "test": [
+            "phpunit"
+        ],
+        "test-coverage": [
+            "phpunit --coverage-text"
+        ],
+        "test-coverage-html": [
+            "phpunit --coverage-html tmp/coverage/"
+        ],
+        "cscheck": [
+            "phpcs src/ tests/ --standard=PSR12 -s"
+        ],
+        "csfix": [
+            "phpcbf src/ tests/ --standard=PSR12"
+        ],
+        "analyze": [
+            "phpstan analyse src/"
+        ],
+        "all": [
+            "@csfix",
+            "@cscheck",
+            "@analyze",
+            "@test"
+        ]
+    }
+}

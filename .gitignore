@@ -1,0 +1,9 @@
+/bin
+/vendor
+/tools
+/tmp
+.idea
+.phpunit.result.cache
+*.drawio.bkp
+*.drawio.dtmp
+
