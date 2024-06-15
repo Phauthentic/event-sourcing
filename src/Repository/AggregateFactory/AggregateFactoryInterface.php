@@ -16,6 +16,4 @@ interface AggregateFactoryInterface
      *
      */
     public function reconstituteFromEvents(string|object $aggregate, Iterator $events): object;
-
-    //public function reconstituteFromSnapshot(string|object $aggregate, Iterator $events): object;
 }

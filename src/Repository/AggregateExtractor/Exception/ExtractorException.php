@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Phauthentic\EventSourcing\Repository\AggregateExtractor\Exception;
 
-use Exception;
+use Phauthentic\EventSourcing\EventSourcingException;
 
 /**
  *
  */
-class ExtractorException extends Exception
+class ExtractorException extends EventSourcingException
 {
     /**
      * @param string $name
