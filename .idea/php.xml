@@ -11,11 +11,6 @@
   <component name="PHPCSFixerOptionsConfiguration">
     <option name="transferred" value="true" />
   </component>
-  <component name="PHPCodeSnifferOptionsConfiguration">
-    <option name="codingStandard" value="CakePHP" />
-    <option name="customRuleset" value="C:/xampp/htdocs/cakephp-codesniffer" />
-    <option name="transferred" value="true" />
-  </component>
   <component name="PhpCodeSniffer">
     <phpcs_settings>
       <PhpCSConfiguration standards="MySource;PEAR;PHPCS;PSR1;PSR2;Squiz;Zend" tool_path="$USER_HOME$/AppData/Roaming/Composer/vendor/bin/phpcs" timeout="10000" />
@@ -78,6 +73,25 @@
       <path value="$PROJECT_DIR$/vendor/symfony/polyfill-mbstring" />
       <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php83" />
       <path value="$PROJECT_DIR$/vendor/symfony/deprecation-contracts" />
+      <path value="$PROJECT_DIR$/vendor/sanmai/pipeline" />
+      <path value="$PROJECT_DIR$/vendor/sanmai/later" />
+      <path value="$PROJECT_DIR$/vendor/ondram/ci-detector" />
+      <path value="$PROJECT_DIR$/vendor/symfony/process" />
+      <path value="$PROJECT_DIR$/vendor/symfony/console" />
+      <path value="$PROJECT_DIR$/vendor/thecodingmachine/safe" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-intl-normalizer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/string" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-intl-grapheme" />
+      <path value="$PROJECT_DIR$/vendor/symfony/finder" />
+      <path value="$PROJECT_DIR$/vendor/fidry/cpu-core-counter" />
+      <path value="$PROJECT_DIR$/vendor/webmozart/assert" />
+      <path value="$PROJECT_DIR$/vendor/infection/infection" />
+      <path value="$PROJECT_DIR$/vendor/infection/extension-installer" />
+      <path value="$PROJECT_DIR$/vendor/infection/mutator" />
+      <path value="$PROJECT_DIR$/vendor/infection/abstract-testframework-adapter" />
+      <path value="$PROJECT_DIR$/vendor/colinodell/json5" />
+      <path value="$PROJECT_DIR$/vendor/infection/include-interceptor" />
+      <path value="$PROJECT_DIR$/vendor/justinrainbow/json-schema" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.2">
