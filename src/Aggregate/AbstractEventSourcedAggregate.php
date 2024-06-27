@@ -12,6 +12,7 @@ use Phauthentic\EventSourcing\Aggregate\Exception\EventMismatchException;
 use Phauthentic\EventSourcing\Aggregate\Exception\MissingEventHandlerException;
 use Phauthentic\EventSourcing\DomainEvent\AggregateIdentityProvidingEventInterface;
 use Phauthentic\EventSourcing\Repository\EventSourcedRepositoryException;
+use Phauthentic\EventStore\EventInterface;
 use ReflectionClass;
 use ReflectionProperty;
 
@@ -46,12 +47,6 @@ abstract class AbstractEventSourcedAggregate
      */
     protected function recordThat(object $event): void
     {
-        if ($this->applyEventOnRecordThat) {
-            $this->applyEvent($event);
-        } else {
-            $this->aggregateVersion++;
-        }
-
         $reflectionClass = new ReflectionClass($this);
         $domainEventsProperty = $this->findDomainEventsProperty($reflectionClass);
 
@@ -69,6 +64,8 @@ abstract class AbstractEventSourcedAggregate
                 $this->domainEventsProperty
             ));
         }
+
+        $this->aggregateVersion++;
     }
 
     private function findDomainEventsProperty(ReflectionClass $reflectionClass): ?ReflectionProperty
@@ -143,32 +140,30 @@ abstract class AbstractEventSourcedAggregate
     }
 
     /**
-     * @param Iterator|array<int, object>|Generator $events
+     * @param Iterator<int, EventInterface>|array<int, EventInterface>|Generator<int, EventInterface> $events
      * @return void
      * @throws EventMismatchException|AggregateEventVersionMismatchException|MissingEventHandlerException
      */
     public function applyEventsFromHistory(Iterator|array|Generator $events): void
     {
+        /** @var EventInterface $event */
         foreach ($events as $event) {
-            $this->assertNextVersion($event);
+            $this->assertNextVersion($event->getAggregateVersion());
             $this->applyEvent($event->getPayload());
         }
     }
 
     /**
-     * @param object $event
+     * @param int $eventVersion
      * @return void
      * @throws AggregateEventVersionMismatchException
      */
-    protected function assertNextVersion(object $event): void
+    protected function assertNextVersion(int $eventVersion): void
     {
-        if (
-            $event instanceof AggregateIdentityProvidingEventInterface
-            && $this->aggregateVersion + 1 !== $event->getAggregateVersion()
-        ) {
+        if ($this->aggregateVersion + 1 !== $eventVersion) {
             throw AggregateEventVersionMismatchException::fromVersions(
                 $this->aggregateVersion,
-                $event->getAggregateVersion()
+                $eventVersion
             );
         }
     }

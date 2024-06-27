@@ -67,11 +67,14 @@ readonly class EventSourcedRepository implements EventSourcedRepositoryInterface
 
     protected function storeEvents(AggregateDataInterface $aggregateData): void
     {
+        $version = $aggregateData->getAggregateVersion() - count($aggregateData->getDomainEvents());
+
         foreach ($aggregateData->getDomainEvents() as $event) {
+            $version++;
             $storeEvent = $this->eventFactory->createEventFromArray([
                 EventInterface::STREAM => (string)$aggregateData->getStream(),
                 EventInterface::AGGREGATE_ID => $aggregateData->getAggregateId(),
-                EventInterface::VERSION => $aggregateData->getAggregateVersion(),
+                EventInterface::VERSION => $version,
                 EventInterface::EVENT => get_class($event),
                 EventInterface::PAYLOAD => $event,
                 EventInterface::CREATED_AT => (new DateTimeImmutable())->format(EventInterface::CREATED_AT_FORMAT)

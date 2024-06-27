@@ -8,6 +8,7 @@ use Iterator;
 use Phauthentic\EventSourcing\Repository\EventSourcedRepositoryException;
 use Phauthentic\SnapshotStore\SnapshotInterface;
 use ReflectionClass;
+use ReflectionException;
 
 /**
  *
@@ -34,18 +35,22 @@ readonly class ReflectionFactory implements AggregateFactoryInterface
             return $this->fromString($aggregate, $events);
         }
 
+        if (is_object($aggregate)) {
+            $aggregate = get_class($aggregate);
+        }
+
         throw EventSourcedRepositoryException::couldNotReconstituteAggregate($aggregate);
     }
 
     /**
-     * @param object $aggregate
+     * @param SnapshotInterface $snapshot
      * @param Iterator $events
      * @return mixed
      * @throws EventSourcedRepositoryException
      */
-    protected function fromSnapshot(object $aggregate, Iterator $events)
+    protected function fromSnapshot(SnapshotInterface $snapshot, Iterator $events)
     {
-        $aggregate = $aggregate->getAggregateRoot();
+        $aggregate = $snapshot->getAggregateRoot();
         $this->assertAggregateHasMethod($aggregate);
         $aggregate->{$this->methodName}($events);
 
@@ -55,11 +60,11 @@ readonly class ReflectionFactory implements AggregateFactoryInterface
     /**
      * @param string $aggregate
      * @param Iterator $events
-     * @return object|string
+     * @return object
      * @throws EventSourcedRepositoryException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
-    protected function fromString(string $aggregate, Iterator $events) {
+    protected function fromString(string $aggregate, Iterator $events): object{
         if (isset($this->classMap[$aggregate])) {
             $aggregate = $this->classMap[$aggregate];
         }
