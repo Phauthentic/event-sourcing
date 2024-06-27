@@ -1,4 +1,5 @@
 <?php
+// phpcs:ignoreFile
 
 declare(strict_types=1);
 
@@ -8,20 +9,6 @@ use Phauthentic\EventSourcing\DomainEvent\AggregateIdentityProvidingEventInterfa
 use Phauthentic\EventSourcing\DomainEvent\AggregateVersionProvidingEvent;
 use Phauthentic\EventSourcing\DomainEvent\TypeProvidingDomainEventInterface;
 use PHPUnit\Framework\TestCase;
-use Phauthentic\EventSourcing\DomainEvent\AbstractDomainEvent;
-
-/**
- * A concrete implementation of AbstractDomainEvent for testing
- */
-class ConcreteDomainEvent extends AbstractDomainEvent
-{
-    public function __construct(string $aggregateId, int $aggregateVersion, string $domainEventType)
-    {
-        $this->aggregateId = $aggregateId;
-        $this->aggregateVersion = $aggregateVersion;
-        $this->domainEventType = $domainEventType;
-    }
-}
 
 /**
  *

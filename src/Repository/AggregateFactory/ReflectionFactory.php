@@ -21,7 +21,7 @@ readonly class ReflectionFactory implements AggregateFactoryInterface
      */
     public function __construct(
         protected string $methodName = 'applyEventsFromHistory',
-        protected array  $classMap = []
+        protected array $classMap = []
     ) {
     }
 
@@ -64,7 +64,8 @@ readonly class ReflectionFactory implements AggregateFactoryInterface
      * @throws EventSourcedRepositoryException
      * @throws ReflectionException
      */
-    protected function fromString(string $aggregate, Iterator $events): object{
+    protected function fromString(string $aggregate, Iterator $events): object
+    {
         if (isset($this->classMap[$aggregate])) {
             $aggregate = $this->classMap[$aggregate];
         }
@@ -82,7 +83,7 @@ readonly class ReflectionFactory implements AggregateFactoryInterface
     protected function assertAggregateHasMethod(object $aggregate): void
     {
         if (!method_exists($aggregate, $this->methodName)) {
-            throw new EventSourcedRepositoryException (sprintf(
+            throw new EventSourcedRepositoryException(sprintf(
                 'Aggregate class `%s` does not have a method `%s` to reconstruct the aggregate state.',
                 get_class($aggregate),
                 $this->methodName

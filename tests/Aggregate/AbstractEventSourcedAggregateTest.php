@@ -8,88 +8,13 @@ use DateTimeImmutable;
 use Generator;
 use Phauthentic\EventStore\Event;
 use PHPUnit\Framework\TestCase;
-use Phauthentic\EventSourcing\Aggregate\AbstractEventSourcedAggregate;
-use Phauthentic\EventSourcing\Aggregate\Attribute\DomainEvents;
 use Phauthentic\EventSourcing\Aggregate\Exception\AggregateEventVersionMismatchException;
 use Phauthentic\EventSourcing\Aggregate\Exception\EventMismatchException;
 use Phauthentic\EventSourcing\Aggregate\Exception\MissingEventHandlerException;
-use Phauthentic\EventSourcing\DomainEvent\AggregateIdentityProvidingEventInterface;
 
 /**
  *
  */
-class ConcreteAggregate extends AbstractEventSourcedAggregate
-{
-    #[DomainEvents]
-    protected array $aggregateEvents = [];
-
-    public string $testProperty = '';
-
-    public function __construct()
-    {
-        $this->aggregateId = 'test-id';
-    }
-
-    protected function whenTestEvent(TestEvent $event): void
-    {
-        $this->testProperty = $event->getText();
-    }
-
-    public function whenIdentityProvidingTestEvent(IdentityProvidingTestEvent $event)
-    {
-        $this->testProperty = $event->getText();
-    }
-
-    public function doSomething(string $data): void
-    {
-        $this->recordThat(new TestEvent($data));
-    }
-
-    public function getAggregateEvents(): array
-    {
-        return $this->aggregateEvents;
-    }
-
-    public function getAggregateVersion(): int
-    {
-        return $this->aggregateVersion;
-    }
-}
-
-/**
- *
- */
-class TestEvent
-{
-    public function __construct(private readonly string $text = '') {}
-
-    public function getText()
-    {
-        return $this->text;
-    }
-}
-
-class TestEvent2 extends TestEvent
-{
-}
-
-class IdentityProvidingTestEvent extends TestEvent implements AggregateIdentityProvidingEventInterface
-{
-    public string $aggregateId = '';
-
-    public int $aggregateVersion = 1;
-
-    public function getAggregateId(): string
-    {
-        return $this->aggregateId;
-    }
-
-    public function getAggregateVersion(): int
-    {
-        return $this->aggregateVersion;
-    }
-}
-
 class AbstractEventSourcedAggregateTest extends TestCase
 {
     private ConcreteAggregate $aggregate;
@@ -127,7 +52,7 @@ class AbstractEventSourcedAggregateTest extends TestCase
 
     public function testApplyEventsFromHistory(): void
     {
-        $eventsGenerator = function(): Generator {
+        $eventsGenerator = function (): Generator {
             yield new Event(
                 aggregateId: 'test-id',
                 aggregateVersion: 1,
@@ -159,7 +84,7 @@ class AbstractEventSourcedAggregateTest extends TestCase
 
     public function testApplyEventsFromHistoryWithGenerator(): void
     {
-        $eventsGenerator = function(): Generator {
+        $eventsGenerator = function (): Generator {
             yield new Event(
                 aggregateId: 'test-id',
                 aggregateVersion: 1,
