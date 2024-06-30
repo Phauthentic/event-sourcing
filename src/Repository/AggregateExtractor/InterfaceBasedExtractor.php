@@ -22,10 +22,10 @@ class InterfaceBasedExtractor implements AggregateExtractorInterface
         }
 
         return new AggregateData(
-            $aggregate->getAggregateId(),
-            $this->getAggregateTypeFromAggregate($aggregate),
-            $aggregate->getAggregateVersion(),
-            $aggregate->consumeAggregateEvents()
+            aggregateId: $aggregate->getAggregateId(),
+            aggregateType: $this->getAggregateTypeFromAggregate($aggregate),
+            version: $aggregate->getAggregateVersion(),
+            events: $aggregate->consumeAggregateEvents()
         );
     }
 
