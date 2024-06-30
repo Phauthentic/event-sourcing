@@ -96,7 +96,7 @@ jobs:
       with:
         php-version: ${{ matrix.php-version }}
         extensions: json, fileinfo
-        coverage: none
+        coverage: pcov
         tools: pecl
 
     - name: Composer install
