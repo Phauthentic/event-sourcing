@@ -57,7 +57,7 @@ readonly class EventSourcedRepository implements EventSourcedRepositoryInterface
     /**
      * @inheritDoc
      */
-    public function persist(object $aggregate, bool $takeSnapshot = false): void
+    public function persist(object $aggregate): void
     {
         $aggregateData = $this->aggregateExtractor->extract($aggregate);
 
@@ -103,13 +103,12 @@ readonly class EventSourcedRepository implements EventSourcedRepositoryInterface
     public function restore(string $aggregateId, string $aggregateType): object
     {
         $snapshot = $this->getSnapshot($aggregateId);
+        $aggregate = $aggregateType;
+        $position = 0;
 
         if ($snapshot) {
             $aggregate = $snapshot->getAggregateRoot();
             $position = $snapshot->getLastVersion();
-        } else {
-            $aggregate = $aggregateType;
-            $position = 0;
         }
 
         $events = $this->eventStore->replyFromPosition($aggregateId, $position);

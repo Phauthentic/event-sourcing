@@ -17,31 +17,7 @@ Other libraries may provide more features, but this library aims to provide a so
 
 > Elon Musk: Delete any part or process you can. You may have to add them back later. In fact, if you do not end up adding back at least 10 percent of them, then you didn't delete enough.
 
-![Overview Diagram](images/raptor-v1-vs-v2.jpg)
-
-## Diagrams
-
-### Package Diagram
-
-The diagram shows the different composer packages and their dependencies.
-
-![Overview Diagram](diagrams/Package-Diagram.svg)
-
-### Flow Diagram
-
-The diagram shows the flow of the data through the different components of the library.
-
-![Overview Diagram](diagrams/Flow-Diagram.svg)
-
-### Entity Diagram
-
-![Overview Diagram](diagrams/Entity-Diagram.svg)
-
-## When to NOT use Event Sourcing
-
-Event sourcing comes with additional complexity. This library aims to provide a simple and flexible foundation for building event sourced applications.
-
-You should NOT use event sourcing when you don't need it. It is a powerful tool, but it is not a silver bullet. It is not a one-size-fits-all solution. Event sourcing is a good solution for scenarious like audit logging, undo/redo functionality, and complex business rules.
+![Simplicity vs Complexity](images/raptor-v1-vs-v2.jpg)
 
 ## Ubiquitous Language
 
@@ -72,3 +48,21 @@ An aggregate repository is a repository for aggregates. It is responsible for lo
 ### Event Publisher
 
 An event publisher is responsible for publishing domain events. It is used to publish domain events to the event bus.
+
+## Diagrams
+
+### Package Diagram
+
+The diagram shows the different composer packages and their dependencies. Note that the library does not depend on any 3rd party libraries.
+
+![Overview Diagram](diagrams/Package-Diagram.svg)
+
+### Flow Diagram
+
+The diagram shows the flow of the data through the different components of the library.
+
+![Overview Diagram](diagrams/Flow-Diagram.svg)
+
+### Entity Diagram
+
+![Overview Diagram](diagrams/Entity-Diagram.svg)

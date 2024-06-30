@@ -6,11 +6,15 @@ namespace Phauthentic\EventSourcing\Test\Aggregate;
 
 use DateTimeImmutable;
 use Generator;
+use Phauthentic\EventSourcing\Aggregate\AbstractEventSourcedAggregate;
+use Phauthentic\EventSourcing\Aggregate\Exception\AggregateException;
 use Phauthentic\EventStore\Event;
 use PHPUnit\Framework\TestCase;
 use Phauthentic\EventSourcing\Aggregate\Exception\AggregateEventVersionMismatchException;
 use Phauthentic\EventSourcing\Aggregate\Exception\EventMismatchException;
 use Phauthentic\EventSourcing\Aggregate\Exception\MissingEventHandlerException;
+use ReflectionClass;
+use ReflectionMethod;
 
 /**
  *
