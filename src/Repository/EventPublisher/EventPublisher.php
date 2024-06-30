@@ -13,12 +13,26 @@ use RuntimeException;
 class EventPublisher implements EventPublisherInterface
 {
     /**
+     * @var array<int, EventPublisherMiddlewareInterface> $middlewares
+     */
+    protected array $middlewares = [];
+
+    /**
      * @param array<int, EventPublisherMiddlewareInterface> $middlewares
      */
     public function __construct(
-        protected array $middlewares = [],
+        array $middlewares = []
     ) {
+        foreach ($middlewares as $middleware) {
+            $this->addMiddleware($middleware);
+        }
+
         $this->assertNonEmptyMiddlewareStack();
+    }
+
+    public function addMiddleware(EventPublisherMiddlewareInterface $middleware): void
+    {
+        $this->middlewares[] = $middleware;
     }
 
     protected function assertNonEmptyMiddlewareStack(): void
@@ -31,11 +45,10 @@ class EventPublisher implements EventPublisherInterface
     public function emitEvent(object $event): void
     {
         foreach ($this->middlewares as $middleware) {
-            if (!is_callable($middleware)) {
-                throw new RuntimeException('Non-callable subscriber!');
+            $middleware->handle($event);
+            if ($middleware->isInterrupting()) {
+                break;
             }
-
-            $middleware($event);
         }
     }
 
