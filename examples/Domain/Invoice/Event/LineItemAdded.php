@@ -9,9 +9,10 @@ namespace Example\Domain\Invoice\Event;
  */
 class LineItemAdded
 {
-	public function __construct(
-		public readonly string $sku,
-		public readonly string $name,
-		public float $price
-	) {}
+    public function __construct(
+        public readonly string $sku,
+        public readonly string $name,
+        public float $price
+    ) {
+    }
 }

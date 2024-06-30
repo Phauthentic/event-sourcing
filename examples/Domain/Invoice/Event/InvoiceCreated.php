@@ -11,8 +11,9 @@ use Example\Domain\Invoice\Address;
  */
 class InvoiceCreated
 {
-	public function __construct(
-		public readonly string $invoiceId,
-		public readonly Address $address,
-	) {}
+    public function __construct(
+        public readonly string $invoiceId,
+        public readonly Address $address,
+    ) {
+    }
 }
