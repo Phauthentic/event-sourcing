@@ -103,13 +103,13 @@ readonly class EventSourcedRepository implements EventSourcedRepositoryInterface
     public function restore(string $aggregateId, string $aggregateType): object
     {
         $snapshot = $this->getSnapshot($aggregateId);
-        $position = 0;
 
         if ($snapshot) {
             $aggregate = $snapshot->getAggregateRoot();
             $position = $snapshot->getLastVersion();
         } else {
             $aggregate = $aggregateType;
+            $position = 0;
         }
 
         $events = $this->eventStore->replyFromPosition($aggregateId, $position);

@@ -27,6 +27,11 @@ class ConcreteAggregate extends AbstractEventSourcedAggregate
         $this->testProperty = $event->getText();
     }
 
+    protected function whenTestEvent2(TestEvent2 $event): void
+    {
+        $this->testProperty = $event->getText();
+    }
+
     public function whenIdentityProvidingTestEvent(IdentityProvidingTestEvent $event)
     {
         $this->testProperty = $event->getText();

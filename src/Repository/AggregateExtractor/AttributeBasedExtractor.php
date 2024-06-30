@@ -11,9 +11,10 @@ use Phauthentic\EventSourcing\Aggregate\Attribute\AggregateType;
 use Phauthentic\EventSourcing\Aggregate\Attribute\AggregateVersion;
 use Phauthentic\EventSourcing\Repository\AggregateData;
 use Phauthentic\EventSourcing\Repository\AggregateDataInterface;
+use Phauthentic\EventSourcing\Repository\AggregateExtractor\Exception\ExtractorException;
+use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionProperty;
-use RuntimeException;
 
 /**
  *
@@ -42,17 +43,61 @@ class AttributeBasedExtractor implements AggregateExtractorInterface
         );
     }
 
-    protected function extractAggregate(ReflectionClass $reflectionClass, object $aggregate): AggregateData
+    protected function assertPropertyHasName(ReflectionClass $reflectionClass, string $name): void
+    {
+        if (!$reflectionClass->hasProperty($name)) {
+            throw new ExtractorException(sprintf(
+                'Property %s not found in %s',
+                $name,
+                $reflectionClass->getName()
+            ));
+        }
+    }
+
+    protected function extractAggregateTypeFromAggregate(
+        object $aggregate,
+        EventSourcedAggregate $aggregateAttribute,
+        ReflectionClass $reflectionClass
+    ): string {
+        $aggregateType = get_class($aggregate);
+        if ($aggregateAttribute->aggregateType !== null) {
+            $aggregateType = $reflectionClass
+                ->getProperty($aggregateAttribute->aggregateType)
+                ->getValue($aggregate);
+        }
+
+        return $aggregateType;
+    }
+
+    /**
+     * @param ReflectionClass $reflectionClass
+     *
+     * @return array<ReflectionAttribute>
+     */
+    protected function getAttributes(ReflectionClass $reflectionClass): array
+    {
+        return $reflectionClass->getAttributes(EventSourcedAggregate::class);
+    }
+
+    protected function assertAggregateHasAttributes(ReflectionClass $reflectionClass): void
     {
         $attributes = $reflectionClass->getAttributes(EventSourcedAggregate::class);
+
         if (empty($attributes)) {
-            throw new RuntimeException(sprintf(
+            throw new ExtractorException(sprintf(
                 'Attribute `%s` found in `%s`',
                 EventSourcedAggregate::class,
                 $reflectionClass->getName()
             ));
         }
+    }
 
+    protected function extractAggregate(ReflectionClass $reflectionClass, object $aggregate): AggregateData
+    {
+        $this->assertAggregateHasAttributes($reflectionClass);
+        $attributes = $this->getAttributes($reflectionClass);
+
+        /** @var EventSourcedAggregate $aggregateAttribute */
         $aggregateAttribute = $attributes[0]->newInstance();
         $properties = [
             'identifierProperty' => $aggregateAttribute->identifierProperty,
@@ -61,21 +106,10 @@ class AttributeBasedExtractor implements AggregateExtractorInterface
         ];
 
         foreach ($properties as $name) {
-            if (!$reflectionClass->hasProperty($name)) {
-                throw new RuntimeException(sprintf(
-                    'Property %s not found in %s',
-                    $name,
-                    $reflectionClass->getName()
-                ));
-            }
+            $this->assertPropertyHasName($reflectionClass, $name);
         }
 
-        $aggregateType = get_class($aggregate);
-        if ($aggregateAttribute->aggregateType !== null) {
-            $aggregateType = $reflectionClass
-                ->getProperty($aggregateAttribute->aggregateType)
-                ->getValue($aggregate);
-        }
+        $aggregateType = $this->extractAggregateTypeFromAggregate($aggregate, $aggregateAttribute, $reflectionClass);
 
         return new AggregateData(
             aggregateId: (string)$reflectionClass
@@ -113,7 +147,7 @@ class AttributeBasedExtractor implements AggregateExtractorInterface
         $value = $this->getValueFromAttribute($property, AggregateVersion::class, $aggregate);
 
         if (!is_int($value)) {
-            throw new RuntimeException(sprintf(
+            throw new ExtractorException(sprintf(
                 'The version property must be an integer, `%s` given.',
                 gettype($value)
             ));
@@ -133,7 +167,7 @@ class AttributeBasedExtractor implements AggregateExtractorInterface
         $value = $this->getValueFromAttribute($property, DomainEvents::class, $aggregate);
 
         if (!is_array($value)) {
-            throw new RuntimeException(sprintf(
+            throw new ExtractorException(sprintf(
                 'The version property must be an integer, `%s` given.',
                 gettype($value)
             ));
@@ -169,7 +203,7 @@ class AttributeBasedExtractor implements AggregateExtractorInterface
             return $reflectionProperty;
         }
 
-        throw new RuntimeException(sprintf(
+        throw new ExtractorException(sprintf(
             'No property with the required attribute `%s` was found class `%s`.',
             $attribute,
             $reflectionClass->getName()

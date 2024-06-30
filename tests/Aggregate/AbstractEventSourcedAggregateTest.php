@@ -136,13 +136,14 @@ class AbstractEventSourcedAggregateTest extends TestCase
     public function testMissingEventHandlerException(): void
     {
         $this->expectException(MissingEventHandlerException::class);
-        $this->expectExceptionMessage('Handler method `whenTestEvent2` for event `Phauthentic\EventSourcing\Test\Aggregate\TestEvent2` does not exist in aggregate `Phauthentic\EventSourcing\Test\Aggregate\ConcreteAggregate`');
+        // phpcs:ignore
+        $this->expectExceptionMessage('Handler method `whenMissingEventHandlerEvent` for event `Phauthentic\EventSourcing\Test\Aggregate\MissingEventHandlerEvent` does not exist in aggregate `Phauthentic\EventSourcing\Test\Aggregate\ConcreteAggregate`');
 
         $event = new Event(
             aggregateId: 'test-id',
             aggregateVersion: 1,
             event: 'TestEvent',
-            payload: new TestEvent2(),
+            payload: new MissingEventHandlerEvent(),
             createdAt: new DateTimeImmutable()
         );
 

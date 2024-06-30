@@ -21,7 +21,7 @@ class MissingEventHandlerException extends AggregateException
         string $eventName,
         string $eventClass,
         string $aggregateClass
-    ): MissingEventHandlerException {
+    ): self {
         return new self(sprintf(
             self::WITH_NAME_AND_CLASS_MESSAGE,
             $eventName,
