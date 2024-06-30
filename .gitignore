@@ -4,6 +4,7 @@
 /tmp
 .idea
 .phpunit.result.cache
+infection.log
 *.drawio.bkp
 *.drawio.dtmp
 

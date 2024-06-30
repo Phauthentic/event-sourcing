@@ -6,10 +6,15 @@ namespace Phauthentic\EventSourcing\Aggregate;
 
 use Generator;
 use Iterator;
+use Phauthentic\EventSourcing\Aggregate\Attribute\DomainEvents;
 use Phauthentic\EventSourcing\Aggregate\Exception\AggregateEventVersionMismatchException;
 use Phauthentic\EventSourcing\Aggregate\Exception\EventMismatchException;
 use Phauthentic\EventSourcing\Aggregate\Exception\MissingEventHandlerException;
 use Phauthentic\EventSourcing\DomainEvent\AggregateIdentityProvidingEventInterface;
+use Phauthentic\EventSourcing\Repository\EventSourcedRepositoryException;
+use Phauthentic\EventStore\EventInterface;
+use ReflectionClass;
+use ReflectionProperty;
 
 /**
  *
@@ -42,13 +47,36 @@ abstract class AbstractEventSourcedAggregate
      */
     protected function recordThat(object $event): void
     {
-        if ($this->applyEventOnRecordThat) {
-            $this->applyEvent($event);
+        $reflectionClass = new ReflectionClass($this);
+        $domainEventsProperty = $this->findDomainEventsProperty($reflectionClass);
+
+        if ($domainEventsProperty !== null) {
+            if ($domainEventsProperty->isPrivate()) {
+                $domainEventsProperty->setAccessible(true);
+            }
+
+            $events = $domainEventsProperty->getValue($this);
+            $events[] = $event;
+            $domainEventsProperty->setValue($this, $events);
         } else {
-            $this->aggregateVersion++;
+            throw new EventSourcedRepositoryException(sprintf(
+                'Could not find domain events property %s',
+                $this->domainEventsProperty
+            ));
         }
 
-        $this->{$this->domainEventsProperty}[$this->aggregateVersion] = $event;
+        $this->aggregateVersion++;
+    }
+
+    private function findDomainEventsProperty(ReflectionClass $reflectionClass): ?ReflectionProperty
+    {
+        foreach ($reflectionClass->getProperties() as $property) {
+            if (!empty($property->getAttributes(DomainEvents::class))) {
+                return $property;
+            }
+        }
+
+        return null;
     }
 
     protected function getEventNameFromEvent(object $event): string
@@ -112,32 +140,30 @@ abstract class AbstractEventSourcedAggregate
     }
 
     /**
-     * @param Iterator|array<int, object>|Generator $events
+     * @param Iterator<int, EventInterface>|array<int, EventInterface>|Generator<int, EventInterface> $events
      * @return void
      * @throws EventMismatchException|AggregateEventVersionMismatchException|MissingEventHandlerException
      */
     public function applyEventsFromHistory(Iterator|array|Generator $events): void
     {
+        /** @var EventInterface $event */
         foreach ($events as $event) {
-            $this->assertNextVersion($event);
+            $this->assertNextVersion($event->getAggregateVersion());
             $this->applyEvent($event->getPayload());
         }
     }
 
     /**
-     * @param object $event
+     * @param int $eventVersion
      * @return void
      * @throws AggregateEventVersionMismatchException
      */
-    protected function assertNextVersion(object $event): void
+    protected function assertNextVersion(int $eventVersion): void
     {
-        if (
-            $event instanceof AggregateIdentityProvidingEventInterface
-            && $this->aggregateVersion + 1 !== $event->getAggregateVersion()
-        ) {
+        if ($this->aggregateVersion + 1 !== $eventVersion) {
             throw AggregateEventVersionMismatchException::fromVersions(
                 $this->aggregateVersion,
-                $event->getAggregateVersion()
+                $eventVersion
             );
         }
     }

@@ -16,7 +16,7 @@ class EventMismatchException extends AggregateException
      * @param object $aggregate
      * @return EventMismatchException
      */
-    public static function eventDoesNotMatchAggregateWith(object $event, object $aggregate): EventMismatchException
+    public static function eventDoesNotMatchAggregateWith(object $event, object $aggregate): self
     {
         return new self(sprintf(
             self::EVENT_DOES_NOT_MATCH_AGGREGATE,

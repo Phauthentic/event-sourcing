@@ -17,7 +17,7 @@ class AggregateEventVersionMismatchException extends AggregateException
      * @param int $eventVersion
      * @return self
      */
-    public static function fromVersions(int $aggregateVersion, int $eventVersion)
+    public static function fromVersions(int $aggregateVersion, int $eventVersion): self
     {
         return new self(sprintf(
             self::MESSAGE_STRING,

@@ -9,5 +9,4 @@ namespace Example\Domain\Invoice\Event;
  */
 class InvoicePaid
 {
-
 }

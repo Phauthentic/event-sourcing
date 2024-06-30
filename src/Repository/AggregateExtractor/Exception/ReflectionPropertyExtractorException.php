@@ -4,22 +4,22 @@ declare(strict_types=1);
 
 namespace Phauthentic\EventSourcing\Repository\AggregateExtractor\Exception;
 
-use Exception;
+use Phauthentic\EventSourcing\EventSourcingException;
 
 /**
  *
  */
-class ReflectionPropertyExtractorException extends ExtractorException
+class ReflectionPropertyExtractorException extends EventSourcingException
 {
     /**
      * @param string $className
-     * @param $propertyName
-     * @return \Phauthentic\EventSourcing\Repository\AggregateExtractor\Exception\ReflectionPropertyExtractorException
+     * @param string $propertyName
+     * @return ReflectionPropertyExtractorException
      */
     public static function classHasMissingProperty(
         string $className,
         string $propertyName
-    ): ReflectionPropertyExtractorException {
+    ): self {
         return new self(sprintf('Aggregate class `%s` is missing the property `%s`', $className, $propertyName));
     }
 }

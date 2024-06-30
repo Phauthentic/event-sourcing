@@ -37,7 +37,6 @@ jobs:
             --health-timeout 5s
             --health-retries 5
         ports:
-          # Maps port 6379 on service container to the host
           - 6379:6379
 
     strategy:
@@ -54,7 +53,7 @@ jobs:
       uses: shivammathur/setup-php@v2
       with:
         php-version: ${{ matrix.php-version }}
-        extensions: mbstring, json, fileinfo
+        extensions: json, fileinfo
         tools: pecl
         coverage: pcov
 
@@ -68,14 +67,20 @@ jobs:
 
     - name: Run PHPUnit
       run: |
-        if [[ ${{ matrix.php-version }} == '8.1' ]]; then
+        if [[ ${{ matrix.php-version }} == '8.2' ]]; then
           bin/phpunit --coverage-clover=coverage.xml
         else
           bin/phpunit
         fi
     - name: Code Coverage Report
-      if: success() && matrix.php-version == '8.1'
+      if: success() && matrix.php-version == '8.2'
       uses: codecov/codecov-action@v4
+
+    - name: Run Infection
+      run: |
+        if [[ ${{ matrix.php-version }} == '8.2' ]]; then
+          bin/infection
+        fi
 
   cs-stan:
     name: Coding Standard & Static Analysis
@@ -90,8 +95,8 @@ jobs:
       uses: shivammathur/setup-php@v2
       with:
         php-version: ${{ matrix.php-version }}
-        extensions: mbstring, json, fileinfo
-        coverage: none
+        extensions: json, fileinfo
+        coverage: pcov
         tools: pecl
 
     - name: Composer install
@@ -102,3 +107,6 @@ jobs:
 
     - name: Run phpstan
       run: bin/phpstan -V && bin/phpstan --error-format=github
+
+    - name: Run Infection
+      run: bin/infection

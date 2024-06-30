@@ -13,8 +13,7 @@ class Address
         public readonly string $street,
         public readonly string $city,
         public readonly string $zip,
-    )
-    {
+    ) {
     }
 
     /**

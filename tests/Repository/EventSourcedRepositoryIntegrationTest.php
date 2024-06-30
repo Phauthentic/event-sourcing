@@ -19,12 +19,14 @@ use Phauthentic\EventStore\EventStoreInterface;
 use Phauthentic\EventStore\InMemoryEventStore;
 use Phauthentic\SnapshotStore\SnapshotFactory;
 use Phauthentic\SnapshotStore\SnapshotFactoryInterface;
-use Phauthentic\SnapshotStore\Store\NullStore;
 use Phauthentic\SnapshotStore\Store\SnapshotStoreInterface;
 use Phauthentic\SnapshotStore\Store\InMemorySnapshotStore;
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
 
+/**
+ *
+ */
 class EventSourcedRepositoryIntegrationTest extends TestCase
 {
     protected SnapshotStoreInterface $snapshotStore;
@@ -86,7 +88,7 @@ class EventSourcedRepositoryIntegrationTest extends TestCase
         $this->assertSame(1, $invoice->lineItemCount());
 
         // Act: Persist the aggregate and restore it
-        $repository->persist($invoice);
+        $repository->persist($invoice, true);
         $invoice = $repository->restore($aggregateId, Invoice::class);
 
         // Assert

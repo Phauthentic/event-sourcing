@@ -13,7 +13,8 @@ class LineItem
         public readonly string $sku,
         public readonly string $name,
         public float $price
-    ) {}
+    ) {
+    }
 
     /**
      * Create a new LineItem instance
