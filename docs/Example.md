@@ -1,4 +1,6 @@
-# Example
+# Event Sourcing Usage Example
+
+This example is showing the usage of event sourcing and this library with the example code provides as part of this repository in `/examples/`.
 
 ```php
 <?php

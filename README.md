@@ -22,7 +22,7 @@ composer require phauthentic/event-sourcing
 
 ## Documentation
 
-* [What is Event Sourcing?](docs/Event-Sourcing.md)
+* [What is Event Sourcing?](docs/What-is-Event-Sourcing)
 * [The Architecture of this Library](docs/Architecture.md)
 * [Make your Aggregates Using Event Sourcing](docs/Make-your-Aggregate-using-Event-Sourcing.md)
 * [Example](docs/Example.md)

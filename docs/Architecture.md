@@ -6,7 +6,7 @@ This document provides an overview and a rationale of the architecture of the li
 
 The driving quality attributes of this library are:
 
-* **Simplicity**: The code should be as minimal as possible and as decoupled as possible from your domain.
+* **Simplicity**: The code should be as minimal as possible and as decoupled as possible from any domain and framework.
 * **Flexibility**: The library should be flexible enough to be used in a variety of scenarios.
 * **Extensibility**: The library should be easy to extend.
 * **Learnability**: The library should be easy to learn and getting started.
@@ -15,7 +15,8 @@ This means that the library tries to minimize 3rd party dependencies as much as 
 
 Other libraries may provide more features, but this library aims to provide a solid but **simple** foundation for building event sourced applications. Usually you should start small and then grow. We believe that this library here is perfect to get quickly started but is offering enough extension points to deal with more evolving complex scenarios as well.
 
-> Elon Musk: Delete any part or process you can. You may have to add them back later. In fact, if you do not end up adding back at least 10 percent of them, then you didn't delete enough.
+> *Delete any part or process you can. You may have to add them back later. In fact, if you do not end up adding back at least 10 percent of them, then you didn't delete enough.* 
+> -- Elon Musk
 
 ![Simplicity vs Complexity](images/raptor-v1-vs-v2.jpg)
 
