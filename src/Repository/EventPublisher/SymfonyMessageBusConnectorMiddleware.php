@@ -20,4 +20,9 @@ class SymfonyMessageBusConnectorMiddleware implements EventPublisherMiddlewareIn
     {
         $this->eventBus->dispatch($event);
     }
+
+    public function isInterrupting(): bool
+    {
+        return false;
+    }
 }

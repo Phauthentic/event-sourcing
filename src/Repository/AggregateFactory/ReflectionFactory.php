@@ -25,6 +25,14 @@ readonly class ReflectionFactory implements AggregateFactoryInterface
     ) {
     }
 
+    /**
+     * @param string|object $aggregate
+     * @param Iterator $events
+     * @return object
+     * @throws EventSourcedRepositoryException
+     * @throws ReflectionException
+     * @SuppressWarnings(PHPMD.StaticAccess)
+ */
     public function reconstituteFromEvents(string|object $aggregate, Iterator $events): object
     {
         if ($aggregate instanceof SnapshotInterface) {

@@ -30,7 +30,11 @@ class ReflectionBasedExtractor implements AggregateExtractorInterface
     }
 
     /**
-     * @throws \Phauthentic\EventSourcing\Repository\AggregateExtractor\Exception\ExtractorException
+     * @param ReflectionClass $reflectionClass
+     * @param string $propertyName
+     * @return void
+     * @throws ReflectionPropertyExtractorException
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     protected function assertAggregateProperty(ReflectionClass $reflectionClass, string $propertyName): void
     {
@@ -42,6 +46,13 @@ class ReflectionBasedExtractor implements AggregateExtractorInterface
         }
     }
 
+    /**
+     * @param mixed $value
+     * @param string $name
+     * @return void
+     * @throws ExtractorException
+     * @SuppressWarnings(PHPMD.StaticAccess)
+ */
     protected function assertNotEmpty(mixed $value, string $name): void
     {
         if (empty($value)) {

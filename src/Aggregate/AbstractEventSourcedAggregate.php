@@ -8,10 +8,10 @@ use Generator;
 use Iterator;
 use Phauthentic\EventSourcing\Aggregate\Attribute\DomainEvents;
 use Phauthentic\EventSourcing\Aggregate\Exception\AggregateEventVersionMismatchException;
+use Phauthentic\EventSourcing\Aggregate\Exception\AggregateException;
 use Phauthentic\EventSourcing\Aggregate\Exception\EventMismatchException;
 use Phauthentic\EventSourcing\Aggregate\Exception\MissingEventHandlerException;
 use Phauthentic\EventSourcing\DomainEvent\AggregateIdentityProvidingEventInterface;
-use Phauthentic\EventSourcing\Repository\EventSourcedRepositoryException;
 use Phauthentic\EventStore\EventInterface;
 use ReflectionClass;
 use ReflectionProperty;
@@ -38,6 +38,8 @@ abstract class AbstractEventSourcedAggregate
 
     protected bool $applyEventOnRecordThat = false;
 
+    protected ?ReflectionClass $reflectionClass = null;
+
     /**
      * Applies and records the event
      *
@@ -47,28 +49,23 @@ abstract class AbstractEventSourcedAggregate
      */
     protected function recordThat(object $event): void
     {
-        $reflectionClass = new ReflectionClass($this);
-        $domainEventsProperty = $this->findDomainEventsProperty($reflectionClass);
-
-        if ($domainEventsProperty !== null) {
-            if ($domainEventsProperty->isPrivate()) {
-                $domainEventsProperty->setAccessible(true);
-            }
-
-            $events = $domainEventsProperty->getValue($this);
-            $events[] = $event;
-            $domainEventsProperty->setValue($this, $events);
-        } else {
-            throw new EventSourcedRepositoryException(sprintf(
-                'Could not find domain events property %s',
-                $this->domainEventsProperty
-            ));
+        if ($this->reflectionClass === null) {
+            $this->reflectionClass = new ReflectionClass($this);
         }
 
+        $domainEventsProperty = $this->findDomainEventsProperty($this->reflectionClass);
+
+        if ($domainEventsProperty->isPrivate()) {
+            $domainEventsProperty->setAccessible(true);
+        }
+
+        $events = $domainEventsProperty->getValue($this);
+        $events[] = $event;
+        $domainEventsProperty->setValue($this, $events);
         $this->aggregateVersion++;
     }
 
-    private function findDomainEventsProperty(ReflectionClass $reflectionClass): ?ReflectionProperty
+    protected function findDomainEventsProperty(ReflectionClass $reflectionClass): ReflectionProperty
     {
         foreach ($reflectionClass->getProperties() as $property) {
             if (!empty($property->getAttributes(DomainEvents::class))) {
@@ -76,7 +73,10 @@ abstract class AbstractEventSourcedAggregate
             }
         }
 
-        return null;
+        throw new AggregateException(sprintf(
+            'Could not find domain events property %s',
+            $this->domainEventsProperty
+        ));
     }
 
     protected function getEventNameFromEvent(object $event): string
@@ -96,6 +96,7 @@ abstract class AbstractEventSourcedAggregate
      * @param string $eventName
      * @return void
      * @throws MissingEventHandlerException
+     * @@SuppressWarnings(PHPMD.StaticAccess)
      */
     protected function assertEventHandlerExists(object $event, string $eventName): void
     {
@@ -110,6 +111,12 @@ abstract class AbstractEventSourcedAggregate
         );
     }
 
+    /**
+     * @param object $event
+     * @return void
+     * @throws EventMismatchException
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     */
     protected function assertEventMatchesAggregate(object $event): void
     {
         if (
@@ -157,6 +164,7 @@ abstract class AbstractEventSourcedAggregate
      * @param int $eventVersion
      * @return void
      * @throws AggregateEventVersionMismatchException
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     protected function assertNextVersion(int $eventVersion): void
     {

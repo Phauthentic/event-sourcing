@@ -11,9 +11,8 @@ interface EventSourcedRepositoryInterface
 {
     /**
      * @param object $aggregate The aggregate
-     * @param bool $takeSnapshot If a snapshot should be taken or not
      */
-    public function persist(object $aggregate, bool $takeSnapshot = false): void;
+    public function persist(object $aggregate): void;
 
     /**
      * @param string $aggregateId Restores an aggregate by its aggregateId
