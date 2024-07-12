@@ -15,7 +15,16 @@ class EventSourcedRepositoryException extends EventSourcingException
     {
         return new self(sprintf(
             'Could not reconstitute aggregate of type: %s',
-            gettype($aggregateType)
+            $aggregateType
+        ));
+    }
+
+    public static function missingReconstitutionMethod(string $aggregateType, string $methodName): self
+    {
+        return new self(sprintf(
+            'Aggregate class `%s` does not have a method `%s` to reconstruct the aggregate state.',
+            $aggregateType,
+            $methodName
         ));
     }
 }

@@ -14,7 +14,10 @@ use Phauthentic\EventSourcing\Aggregate\Attribute\AggregateVersion;
 use Phauthentic\EventSourcing\Aggregate\Attribute\DomainEvents;
 
 /**
+ * This is an example aggregate that represents an invoice.
  *
+ * By no means this re-assembles a real invoice implementation. It only serves the purpose of showing how to implement
+ * event sourcing within an aggregate.
  */
 final class Invoice extends AbstractEventSourcedAggregate
 {
@@ -50,7 +53,9 @@ final class Invoice extends AbstractEventSourcedAggregate
      */
     protected function assertAtLeastOneLineItem(array $lineItems): void
     {
-        assert(count($lineItems) > 0, 'Your invoice must have at least one line item!');
+        if (count($lineItems) === 0) {
+            throw InvoiceException::mustHaveAtLeastOneLineItem();
+        }
     }
 
     public static function create(
@@ -76,12 +81,14 @@ final class Invoice extends AbstractEventSourcedAggregate
         return $that;
     }
 
-    protected function assertInvoiceWasNotPaid()
+    protected function assertInvoiceWasNotPaid(): void
     {
-        assert(!$this->paid, 'The invoice was paid');
+        if ($this->paid === true) {
+            throw InvoiceException::invoiceIsAlreadyPaid();
+        }
     }
 
-    public function addLineItem(LineItem $lineItem)
+    public function addLineItem(LineItem $lineItem): void
     {
         $this->assertInvoiceWasNotPaid();
 
@@ -112,13 +119,20 @@ final class Invoice extends AbstractEventSourcedAggregate
         }
     }
 
-    public function flagAsPaid()
+    public function flagAsPaid(): void
     {
         $this->assertInvoiceWasNotPaid();
 
         $this->paid = true;
 
-        $this->recordThat(new InvoicePaid());
+        $this->recordThat(InvoicePaid::create(
+            $this->aggregateId
+        ));
+    }
+
+    public function domainEventCount(): int
+    {
+        return count($this->aggregateEvents);
     }
 
     public function lineItemCount(): int
@@ -146,7 +160,7 @@ final class Invoice extends AbstractEventSourcedAggregate
         return $this->address;
     }
 
-    protected function whenLineItemAdded(LineItemAdded $event)
+    protected function whenLineItemAdded(LineItemAdded $event): void
     {
         $this->lineItems[$event->sku] = new LineItem(
             sku: $event->sku,
@@ -155,14 +169,22 @@ final class Invoice extends AbstractEventSourcedAggregate
         );
     }
 
-    protected function whenInvoiceCreated(InvoiceCreated $event)
+    protected function whenInvoiceCreated(InvoiceCreated $event): void
     {
         $this->aggregateId = $event->invoiceId;
         $this->address = $event->address;
     }
 
-    protected function whenInvoicePaid(InvoicePaid $event)
+    protected function whenInvoicePaid(InvoicePaid $event): void
     {
         $this->paid = true;
+    }
+
+    /**
+     * @return object[]
+     */
+    public function getDomainEvents(): array
+    {
+        return $this->aggregateEvents;
     }
 }

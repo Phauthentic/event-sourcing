@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Phauthentic\EventSourcing\Test\Repository;
 
 use Example\Domain\Invoice\Address;
+use Example\Domain\Invoice\Event\InvoiceCreated;
+use Example\Domain\Invoice\Event\LineItemAdded;
 use Example\Domain\Invoice\Invoice;
 use Example\Domain\Invoice\InvoiceId;
 use Example\Domain\Invoice\LineItem;
@@ -13,6 +15,9 @@ use Phauthentic\EventSourcing\Repository\AggregateExtractor\AttributeBasedExtrac
 use Phauthentic\EventSourcing\Repository\AggregateFactory\AggregateFactoryInterface;
 use Phauthentic\EventSourcing\Repository\AggregateFactory\ReflectionFactory;
 use Phauthentic\EventSourcing\Repository\EventSourcedRepository;
+use Phauthentic\EventSourcing\Repository\EventSourcedRepositoryInterface;
+use Phauthentic\EventSourcing\Repository\SnapshotStrategy\EveryNthVersionStrategy;
+use Phauthentic\EventSourcing\Repository\SnapshotStrategy\EveryVersionStrategy;
 use Phauthentic\EventStore\EventFactory;
 use Phauthentic\EventStore\EventFactoryInterface;
 use Phauthentic\EventStore\EventStoreInterface;
@@ -36,6 +41,10 @@ class EventSourcedRepositoryIntegrationTest extends TestCase
     protected EventFactoryInterface $eventFactory;
     protected SnapshotFactoryInterface $snapshotFactory;
 
+    protected string $aggregateId = '';
+
+    protected EventSourcedRepositoryInterface $repository;
+
     public function setUp(): void
     {
         parent::setUp();
@@ -46,6 +55,9 @@ class EventSourcedRepositoryIntegrationTest extends TestCase
         $this->aggregateFactory = new ReflectionFactory();
         $this->eventFactory = new EventFactory();
         $this->snapshotFactory = new SnapshotFactory();
+
+        $this->aggregateId = Uuid::uuid4()->toString();
+        $this->repository = $this->createRepository();
     }
 
     protected function createRepository(): EventSourcedRepository
@@ -56,18 +68,18 @@ class EventSourcedRepositoryIntegrationTest extends TestCase
             aggregateFactory: $this->aggregateFactory,
             eventFactory: $this->eventFactory,
             snapshotStore: $this->snapshotStore,
-            snapshotFactory: $this->snapshotFactory
+            snapshotFactory: $this->snapshotFactory,
+            snapshotStrategies: [
+                new EveryVersionStrategy(),
+            ]
         );
     }
 
-    public function testEventSourcedRepositoryIntegration(): void
+    private function createInvoice(): Invoice
     {
-        $aggregateId = Uuid::uuid4()->toString();
-        $repository = $this->createRepository();
-
         // Act: Create the Invoice aggregate
         $invoice = Invoice::create(
-            InvoiceId::fromString($aggregateId),
+            InvoiceId::fromString($this->aggregateId),
             Address::create(
                 street: 'My Street',
                 city: 'My City',
@@ -75,26 +87,63 @@ class EventSourcedRepositoryIntegrationTest extends TestCase
             ),
             [
                 LineItem::create(
-                    sku:'1',
+                    sku: '1',
                     name: 'Beer',
                     price: 12.10
                 )
             ]
         );
 
-        // Assert to verify its state
-        $this->assertSame($aggregateId, (string)$invoice->getInvoiceId());
+        // Asserts to verify its state
+        $this->assertSame($this->aggregateId, (string)$invoice->getInvoiceId());
         $this->assertSame(2, $invoice->getDomainEventCount());
+        $this->assertSame(2, $invoice->getAggregateVersion());
         $this->assertSame(1, $invoice->lineItemCount());
 
-        // Act: Persist the aggregate and restore it
-        $repository->persist($invoice, true);
-        $invoice = $repository->restore($aggregateId, Invoice::class);
+        $this->assertInstanceOf(InvoiceCreated::class, $invoice->getDomainEvents()[0]);
+        $this->assertInstanceOf(LineItemAdded::class, $invoice->getDomainEvents()[1]);
+
+        return $invoice;
+    }
+
+    private function assertAggregateState(
+        Invoice $invoice,
+        int $expectedDomainEventCount,
+        int $expectedAggregateVersion,
+        int $expectedLineItemCount
+    ) {
+        $this->assertSame($expectedDomainEventCount, $invoice->getDomainEventCount());
+        $this->assertSame($expectedAggregateVersion, $invoice->getAggregateVersion());
+        $this->assertSame($expectedLineItemCount, $invoice->lineItemCount());
+
+        //var_dump($this->snapshotStore);
+    }
+
+    public function testEventSourcedRepositoryIntegration(): void
+    {
+        $invoice = $this->createInvoice();
+
+        // Act: Restore teh aggregate
+        $this->repository->persist($invoice);
+
+        $this->assertAggregateState(
+            invoice: $invoice,
+            expectedDomainEventCount: 0,
+            expectedAggregateVersion: 2,
+            expectedLineItemCount: 1
+        );
+
+        //dd($this->eventStore);
+        // Act: Restore the aggregate
+        $invoice = $this->repository->restore($this->aggregateId, Invoice::class);
 
         // Assert
-        $this->assertSame($aggregateId, (string)$invoice->getInvoiceId());
-        $this->assertSame(1, $invoice->lineItemCount());
-        $this->assertSame(2, $invoice->getAggregateVersion());
+        $this->assertAggregateState(
+            invoice: $invoice,
+            expectedDomainEventCount: 0,
+            expectedAggregateVersion: 2,
+            expectedLineItemCount: 1
+        );
 
         // Act: Add one more line
         $invoice->addLineItem(LineItem::create(
@@ -102,21 +151,47 @@ class EventSourcedRepositoryIntegrationTest extends TestCase
             name: 'Book',
             price: 100.10
         ));
-        $repository->persist($invoice);
-        $invoice = $repository->restore($aggregateId, Invoice::class);
 
-        // Assert
-        $this->assertSame($aggregateId, (string)$invoice->getInvoiceId());
-        $this->assertSame(2, $invoice->lineItemCount());
-        $this->assertSame(3, $invoice->getAggregateVersion());
+        // Assert that the aggregate should have now 2 line items
+        $this->assertAggregateState(
+            invoice: $invoice,
+            expectedDomainEventCount: 1,
+            expectedAggregateVersion: 3,
+            expectedLineItemCount: 2
+        );
+
+        // Act: Persist the aggregate and restore it
+        $this->repository->persist($invoice);
+        $invoice = $this->repository->restore($this->aggregateId, Invoice::class);
+
+        // Check that after restoring, the aggregates properties are still the same
+        $this->assertAggregateState(
+            invoice: $invoice,
+            expectedDomainEventCount: 0,
+            expectedAggregateVersion: 3,
+            expectedLineItemCount: 2
+        );
 
         // Act: Flag as Paid
         $invoice->flagAsPaid();
-        $repository->persist($invoice);
-        $invoice = $repository->restore($aggregateId, Invoice::class);
 
-        // Assert
-        $this->assertSame($aggregateId, (string)$invoice->getInvoiceId());
-        $this->assertSame(4, $invoice->getAggregateVersion());
+        // Assert: Aggregate should now have 4 events
+        $this->assertAggregateState(
+            invoice: $invoice,
+            expectedDomainEventCount: 1,
+            expectedAggregateVersion: 4,
+            expectedLineItemCount: 2
+        );
+
+        // Act: Persist and restore the aggregate
+        $this->repository->persist($invoice);
+        $invoice = $this->repository->restore($this->aggregateId, Invoice::class);
+
+        $this->assertAggregateState(
+            invoice: $invoice,
+            expectedDomainEventCount: 0,
+            expectedAggregateVersion: 4,
+            expectedLineItemCount: 2
+        );
     }
 }

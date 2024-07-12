@@ -36,24 +36,17 @@ abstract class AbstractEventSourcedAggregate
 
     protected const EVENT_METHOD_SUFFIX = '';
 
-    protected bool $applyEventOnRecordThat = false;
-
-    protected ?ReflectionClass $reflectionClass = null;
-
     /**
      * Applies and records the event
      *
      * @param object $event
      * @return void
-     * @throws EventMismatchException|MissingEventHandlerException
+     * @throws EventMismatchException|MissingEventHandlerException|AggregateException
      */
     protected function recordThat(object $event): void
     {
-        if ($this->reflectionClass === null) {
-            $this->reflectionClass = new ReflectionClass($this);
-        }
-
-        $domainEventsProperty = $this->findDomainEventsProperty($this->reflectionClass);
+        $reflectionClass = new ReflectionClass($this);
+        $domainEventsProperty = $this->findDomainEventsProperty($reflectionClass);
 
         if ($domainEventsProperty->isPrivate()) {
             $domainEventsProperty->setAccessible(true);
@@ -168,11 +161,13 @@ abstract class AbstractEventSourcedAggregate
      */
     protected function assertNextVersion(int $eventVersion): void
     {
-        if ($this->aggregateVersion + 1 !== $eventVersion) {
-            throw AggregateEventVersionMismatchException::fromVersions(
-                $this->aggregateVersion,
-                $eventVersion
-            );
+        if ($this->aggregateVersion + 1 === $eventVersion) {
+            return;
         }
+
+        throw AggregateEventVersionMismatchException::fromVersions(
+            $this->aggregateVersion,
+            $eventVersion
+        );
     }
 }

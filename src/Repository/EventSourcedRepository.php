@@ -62,7 +62,15 @@ readonly class EventSourcedRepository implements EventSourcedRepositoryInterface
         $aggregateData = $this->aggregateExtractor->extract($aggregate);
 
         $this->storeEvents($aggregateData);
-        $this->applySnapshotStrategies($aggregate, $aggregateData);
+
+        if ($this->hasSnapshotStore()) {
+            $this->applySnapshotStrategies($aggregate, $aggregateData);
+        }
+    }
+
+    protected function hasSnapshotStore(): bool
+    {
+        return $this->snapshotStore !== null;
     }
 
     protected function storeEvents(AggregateDataInterface $aggregateData): void
@@ -102,13 +110,16 @@ readonly class EventSourcedRepository implements EventSourcedRepositoryInterface
 
     public function restore(string $aggregateId, string $aggregateType): object
     {
-        $snapshot = $this->getSnapshot($aggregateId);
         $aggregate = $aggregateType;
         $position = 0;
 
-        if ($snapshot) {
-            $aggregate = $snapshot->getAggregateRoot();
-            $position = $snapshot->getLastVersion();
+        if ($this->hasSnapshotStore()) {
+            $snapshot = $this->getSnapshot($aggregateId);
+
+            if ($snapshot) {
+                $aggregate = $snapshot->getAggregateRoot();
+                $position = $snapshot->getLastVersion();
+            }
         }
 
         $events = $this->eventStore->replyFromPosition($aggregateId, $position);
@@ -116,7 +127,7 @@ readonly class EventSourcedRepository implements EventSourcedRepositoryInterface
         return $this->aggregateFactory->reconstituteFromEvents($aggregate, $events);
     }
 
-    public function takeSnapshot(object $aggregate): void
+    protected function takeSnapshot(object $aggregate): void
     {
         $aggregateData = $this->aggregateExtractor->extract($aggregate);
 
@@ -135,7 +146,7 @@ readonly class EventSourcedRepository implements EventSourcedRepositoryInterface
      * @param string $aggregateId
      * @return null|SnapshotInterface
      */
-    public function getSnapshot(string $aggregateId): ?SnapshotInterface
+    protected function getSnapshot(string $aggregateId): ?SnapshotInterface
     {
         return $this->snapshotStore->get($aggregateId);
     }

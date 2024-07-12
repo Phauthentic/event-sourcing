@@ -6,15 +6,11 @@ namespace Phauthentic\EventSourcing\Test\Aggregate;
 
 use DateTimeImmutable;
 use Generator;
-use Phauthentic\EventSourcing\Aggregate\AbstractEventSourcedAggregate;
-use Phauthentic\EventSourcing\Aggregate\Exception\AggregateException;
 use Phauthentic\EventStore\Event;
 use PHPUnit\Framework\TestCase;
 use Phauthentic\EventSourcing\Aggregate\Exception\AggregateEventVersionMismatchException;
 use Phauthentic\EventSourcing\Aggregate\Exception\EventMismatchException;
 use Phauthentic\EventSourcing\Aggregate\Exception\MissingEventHandlerException;
-use ReflectionClass;
-use ReflectionMethod;
 
 /**
  *
@@ -122,19 +118,16 @@ class AbstractEventSourcedAggregateTest extends TestCase
     {
         $this->expectException(EventMismatchException::class);
 
-        $testEvent = new IdentityProvidingTestEvent('data 1');
-        $testEvent->aggregateId = 'wrong-id';
-        $testEvent->aggregateVersion = 1;
-
         $event = new Event(
             aggregateId: 'test-id',
             aggregateVersion: 1,
             event: 'TestEvent',
-            payload: $testEvent,
+            payload: new IdentityProvidingTestEvent('data 1'),
             createdAt: new DateTimeImmutable()
         );
 
-        $this->aggregate->applyEventsFromHistory([$event]);
+        $aggregate = new ConcreteAggregate();
+        $aggregate->applyEventsFromHistory([$event]);
     }
 
     public function testMissingEventHandlerException(): void

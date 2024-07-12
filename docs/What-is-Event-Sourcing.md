@@ -6,6 +6,27 @@ This approach provides a comprehensive audit trail of all changes, enabling trac
 
 ## When to NOT use it
 
-Event sourcing comes with additional complexity. You should NOT use event sourcing when you don't need it. It is a powerful tool, but it is not a silver bullet. It is not a one-size-fits-all solution. Event sourcing is a good solution for scenarious like audit logging, undo/redo functionality, and complex business rules.
+Event sourcing comes with additional complexity. You should **not** use event sourcing when you don't need it. It is a powerful tool, but it is not a silver bullet. It is not a one-size-fits-all solution. Event sourcing is a good solution for scenarious like audit logging, undo/redo functionality, and complex business rules.
 
-If you have no good reason to use it, then don't.
+| Quality Attribute         | Use Event Sourcing                                 | Don't Use Event Sourcing                             |
+|---------------------------|----------------------------------------------------|------------------------------------------------------|
+| Audit Trail               | Complete history required                          | Basic logging sufficient                             |
+| Temporal Queries          | Frequent historical state reconstruction           | Only current state needed                            |
+| Domain Complexity         | Complex domain with many state transitions         | Simple CRUD operations                               |
+| Scalability               | High write scalability needed                      | Moderate scalability sufficient                      |
+| Consistency               | Eventual consistency acceptable                    | Strict immediate consistency required                |
+| Performance               | Read-heavy systems with async processing           | Write-heavy systems with sync requirements           |
+| Data Evolution            | Frequent schema changes expected                   | Stable data model                                    |
+| Concurrency               | High contention on aggregate roots                 | Low concurrency needs                                |
+| Debugging/Troubleshooting | Detailed system behavior analysis needed           | Simple error logging sufficient                      |
+| Undo/Redo Functionality   | Complex undo/redo operations required              | No or simple undo/redo needs                         |
+| Regulatory Compliance     | Strict data lineage and audit requirements         | Basic compliance needs                               |
+| System Complexity         | Willing to embrace increased initial complexity    | Keeping system simple is a priority                  |
+| Team Expertise            | Team familiar with DDD and CQRS concepts           | Team more comfortable with traditional architectures |
+| Integration Patterns      | Event-driven architecture planned                  | Request-response patterns preferred                  |
+| Storage Requirements      | Disk space abundant                                | Storage constraints are a concern                    |
+| Reporting                 | Complex, flexible reporting needs                  | Standard, simple reporting suffices                  |
+| Business Intelligence     | Deep insights from historical data needed          | Basic analytics on current state sufficient          |
+| Recovery Scenarios        | Advanced recovery and replay capabilities required | Simple backup and restore sufficient                 |
+
+**If you have no good reasons to use it, then don't!**

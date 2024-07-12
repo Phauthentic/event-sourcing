@@ -26,10 +26,11 @@ composer require phauthentic/event-sourcing
 * [The Architecture of this Library](docs/Architecture.md)
 * [Make your Aggregates Using Event Sourcing](docs/Make-your-Aggregate-using-Event-Sourcing.md)
 * [Example](docs/Example.md)
+* [Running Tests](docs/Running-Tests.md)
 * [Other Event Sourcing Libraries](docs/Other-Event-Sourcing-Libraries.md)
 
 ## License
 
 Copyright Florian Krämer
 
-Licensed under the [MIT license](license.txt).
+Licensed under the [MIT license](LICENSE).
