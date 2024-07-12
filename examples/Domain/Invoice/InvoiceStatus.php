@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Example\Domain\Invoice;
 
+/**
+ *
+ */
 enum InvoiceStatus: string
 {
     case DRAFT = 'draft';

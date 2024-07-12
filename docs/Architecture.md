@@ -6,7 +6,7 @@ This document provides an overview and a rationale of the architecture of the li
 
 The driving quality attributes of this library are:
 
-* **Simplicity**: The code should be as minimal as possible and as decoupled as possible from your domain.
+* **Simplicity**: The code should be as minimal as possible and as decoupled as possible from any domain and framework.
 * **Flexibility**: The library should be flexible enough to be used in a variety of scenarios.
 * **Extensibility**: The library should be easy to extend.
 * **Learnability**: The library should be easy to learn and getting started.
@@ -15,33 +15,10 @@ This means that the library tries to minimize 3rd party dependencies as much as 
 
 Other libraries may provide more features, but this library aims to provide a solid but **simple** foundation for building event sourced applications. Usually you should start small and then grow. We believe that this library here is perfect to get quickly started but is offering enough extension points to deal with more evolving complex scenarios as well.
 
-> Elon Musk: Delete any part or process you can. You may have to add them back later. In fact, if you do not end up adding back at least 10 percent of them, then you didn't delete enough.
+> *Delete any part or process you can. You may have to add them back later. In fact, if you do not end up adding back at least 10 percent of them, then you didn't delete enough.* 
+> -- Elon Musk
 
-![Overview Diagram](images/raptor-v1-vs-v2.jpg)
-
-## Diagrams
-
-### Package Diagram
-
-The diagram shows the different composer packages and their dependencies.
-
-![Overview Diagram](diagrams/Package-Diagram.svg)
-
-### Flow Diagram
-
-The diagram shows the flow of the data through the different components of the library.
-
-![Overview Diagram](diagrams/Flow-Diagram.svg)
-
-### Entity Diagram
-
-![Overview Diagram](diagrams/Entity-Diagram.svg)
-
-## When to NOT use Event Sourcing
-
-Event sourcing comes with additional complexity. This library aims to provide a simple and flexible foundation for building event sourced applications.
-
-You should NOT use event sourcing when you don't need it. It is a powerful tool, but it is not a silver bullet. It is not a one-size-fits-all solution. Event sourcing is a good solution for scenarious like audit logging, undo/redo functionality, and complex business rules.
+![Simplicity vs Complexity](images/raptor-v1-vs-v2.jpg)
 
 ## Ubiquitous Language
 
@@ -72,3 +49,21 @@ An aggregate repository is a repository for aggregates. It is responsible for lo
 ### Event Publisher
 
 An event publisher is responsible for publishing domain events. It is used to publish domain events to the event bus.
+
+## Diagrams
+
+### Package Diagram
+
+The diagram shows the different composer packages and their dependencies. Note that the library does not depend on any 3rd party libraries.
+
+![Overview Diagram](diagrams/Package-Diagram.svg)
+
+### Flow Diagram
+
+The diagram shows the flow of the data through the different components of the library.
+
+![Overview Diagram](diagrams/Flow-Diagram.svg)
+
+### Entity Diagram
+
+![Overview Diagram](diagrams/Entity-Diagram.svg)

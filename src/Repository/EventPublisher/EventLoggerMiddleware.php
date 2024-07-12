@@ -25,4 +25,9 @@ class EventLoggerMiddleware implements EventPublisherMiddlewareInterface
     {
         $this->logger->info(sprintf('Event %s emitted.', get_class($event)));
     }
+
+    public function isInterrupting(): bool
+    {
+        return false;
+    }
 }

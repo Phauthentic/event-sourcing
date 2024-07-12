@@ -7,7 +7,7 @@ namespace Phauthentic\EventSourcing\Repository\SnapshotStrategy;
 use Phauthentic\EventSourcing\Repository\AggregateDataInterface;
 
 /**
- *
+ * Takes a snapshot if certain events occur.
  */
 class OnEventStrategy implements SnapshotStrategyInterface
 {

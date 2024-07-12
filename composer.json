@@ -58,6 +58,9 @@
         "test": [
             "phpunit"
         ],
+        "infection": [
+            "infection"
+        ],
         "test-coverage": [
             "phpunit --coverage-text"
         ],
@@ -72,6 +75,9 @@
         ],
         "analyze": [
             "phpstan analyse src/"
+        ],
+        "phpmd": [
+            "bin/phpmd ./src text cleancode,codesize,controversial,design"
         ],
         "all": [
             "@csfix",

@@ -16,30 +16,42 @@ use ReflectionException;
 readonly class ReflectionFactory implements AggregateFactoryInterface
 {
     /**
-     * @param string $methodName
+     * @param string $applyEventsMethodName
      * @param array<string, string> $classMap
      */
     public function __construct(
-        protected string $methodName = 'applyEventsFromHistory',
+        protected string $applyEventsMethodName = 'applyEventsFromHistory',
         protected array $classMap = []
     ) {
     }
 
+    /**
+     * @param string|object $aggregate
+     * @param Iterator $events
+     * @return object
+     * @throws EventSourcedRepositoryException
+     * @throws ReflectionException
+     * @SuppressWarnings(PHPMD.StaticAccess)
+ */
     public function reconstituteFromEvents(string|object $aggregate, Iterator $events): object
     {
-        if ($aggregate instanceof SnapshotInterface) {
-            return $this->fromSnapshot($aggregate, $events);
-        }
-
         if (is_string($aggregate)) {
             return $this->fromString($aggregate, $events);
         }
 
-        if (is_object($aggregate)) {
-            $aggregate = get_class($aggregate);
+        if ($aggregate instanceof SnapshotInterface) {
+            return $this->fromSnapshot($aggregate, $events);
         }
 
-        throw EventSourcedRepositoryException::couldNotReconstituteAggregate($aggregate);
+        $this->assertAggregateHasMethod($aggregate);
+        /*
+        foreach ($events as $event) {
+            //var_dump($event);
+        }
+        */
+        $aggregate->{$this->applyEventsMethodName}($events);
+
+        return $aggregate;
     }
 
     /**
@@ -52,7 +64,7 @@ readonly class ReflectionFactory implements AggregateFactoryInterface
     {
         $aggregate = $snapshot->getAggregateRoot();
         $this->assertAggregateHasMethod($aggregate);
-        $aggregate->{$this->methodName}($events);
+        $aggregate->{$this->applyEventsMethodName}($events);
 
         return $aggregate;
     }
@@ -75,19 +87,18 @@ readonly class ReflectionFactory implements AggregateFactoryInterface
         $aggregate = $reflectionClass->newInstanceWithoutConstructor();
         $this->assertAggregateHasMethod($aggregate);
 
-        $aggregate->{$this->methodName}($events);
+        $aggregate->{$this->applyEventsMethodName}($events);
 
         return $aggregate;
     }
 
     protected function assertAggregateHasMethod(object $aggregate): void
     {
-        if (!method_exists($aggregate, $this->methodName)) {
-            throw new EventSourcedRepositoryException(sprintf(
-                'Aggregate class `%s` does not have a method `%s` to reconstruct the aggregate state.',
+        if (!method_exists($aggregate, $this->applyEventsMethodName)) {
+            throw  EventSourcedRepositoryException::missingReconstitutionMethod(
                 get_class($aggregate),
-                $this->methodName
-            ));
+                $this->applyEventsMethodName
+            );
         }
     }
 }

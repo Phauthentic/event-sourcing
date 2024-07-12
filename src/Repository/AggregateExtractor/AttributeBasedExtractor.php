@@ -173,6 +173,8 @@ class AttributeBasedExtractor implements AggregateExtractorInterface
             ));
         }
 
+        $property->setValue($aggregate, []);
+
         return $value;
     }
 
