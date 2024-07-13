@@ -12,6 +12,7 @@ use Phauthentic\EventSourcing\Repository\SnapshotStrategy\SnapshotStrategyInterf
 use Phauthentic\EventStore\EventFactoryInterface;
 use Phauthentic\EventStore\EventInterface;
 use Phauthentic\EventStore\EventStoreInterface;
+use Phauthentic\EventStore\ReplyFromPositionQuery;
 use Phauthentic\SnapshotStore\SnapshotFactoryInterface;
 use Phauthentic\SnapshotStore\SnapshotInterface;
 use Phauthentic\SnapshotStore\Store\SnapshotStoreInterface;
@@ -26,7 +27,7 @@ use Phauthentic\SnapshotStore\Store\SnapshotStoreInterface;
  * - An aggregate extractor that extracts all relevant data from the aggregate object.
  * - A snapshot store that can take serialized snapshots of aggregate objects.
  * - An event publisher that is a wrapper to connect the aggregate with whatever
- *   event system you are using. Just wrap with a class implementing the EventPublisherInterface
+ *   event system you are using. Just wrap with a class implementing the EventPublisherInterface.
  */
 readonly class EventSourcedRepository implements EventSourcedRepositoryInterface
 {
@@ -122,7 +123,10 @@ readonly class EventSourcedRepository implements EventSourcedRepositoryInterface
             }
         }
 
-        $events = $this->eventStore->replyFromPosition($aggregateId, $position);
+        $events = $this->eventStore->replyFromPosition(new ReplyFromPositionQuery(
+            aggregateId: $aggregateId,
+            position: $position + 1
+        ));
 
         return $this->aggregateFactory->reconstituteFromEvents($aggregate, $events);
     }
