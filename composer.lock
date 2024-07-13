@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "21deb4c4bc1d8f702e1c8e23b4e4c2d9",
+    "content-hash": "e6bef133f1715f47a0af436549cafcda",
     "packages": [
         {
             "name": "phauthentic/event-store",
@@ -5080,6 +5080,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
+        "phauthentic/event-store": 10,
         "phauthentic/snapshot-store": 20
     },
     "prefer-stable": true,

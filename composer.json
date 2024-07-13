@@ -20,7 +20,7 @@
         "infection/infection": "^0.29.6",
         "phpmd/phpmd": "^2.15",
         "phpro/grumphp-shim": "^2.5",
-        "phpstan/phpstan": "^1.10",
+        "phpstan/phpstan": "^1.11",
         "phpunit/phpunit": "^9.6",
         "psr/container": "^1.0||^2.0",
         "psr/log": "^2.0||^3.0",
