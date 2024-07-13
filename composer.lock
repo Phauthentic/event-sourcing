@@ -4,29 +4,33 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cb6cfb3c9e7069894d5ca18b3c999124",
+    "content-hash": "e6bef133f1715f47a0af436549cafcda",
     "packages": [
         {
             "name": "phauthentic/event-store",
-            "version": "dev-master",
+            "version": "1.0.0-beta1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Phauthentic/event-store.git",
-                "reference": "c44ff53420afe6387aa73c78c4f33ae4d4eae3c8"
+                "reference": "ac563a0ede64ad39d49171bb514e2c2955de68bf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Phauthentic/event-store/zipball/c44ff53420afe6387aa73c78c4f33ae4d4eae3c8",
-                "reference": "c44ff53420afe6387aa73c78c4f33ae4d4eae3c8",
+                "url": "https://api.github.com/repos/Phauthentic/event-store/zipball/ac563a0ede64ad39d49171bb514e2c2955de68bf",
+                "reference": "ac563a0ede64ad39d49171bb514e2c2955de68bf",
                 "shasum": ""
             },
+            "require": {
+                "php": "^8.2"
+            },
             "require-dev": {
+                "ext-pdo": "*",
+                "infection/infection": "^0.29.6",
                 "phpstan/phpstan": "^1.10",
                 "phpunit/phpunit": "^10.5",
                 "ramsey/uuid": "^4.7",
                 "squizlabs/php_codesniffer": "^3.9"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -43,9 +47,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Phauthentic/event-store/issues",
-                "source": "https://github.com/Phauthentic/event-store/tree/master"
+                "source": "https://github.com/Phauthentic/event-store/tree/1.0.0-beta1"
             },
-            "time": "2024-07-12T20:20:45+00:00"
+            "time": "2024-07-13T20:01:29+00:00"
         },
         {
             "name": "phauthentic/snapshot-store",
@@ -5076,7 +5080,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "phauthentic/event-store": 20,
+        "phauthentic/event-store": 10,
         "phauthentic/snapshot-store": 20
     },
     "prefer-stable": true,

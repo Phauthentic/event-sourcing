@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Phauthentic\EventSourcing\Repository\AggregateExtractor;
 
 use DateTimeImmutable;
+use Phauthentic\EventSourcing\DomainEvent\AggregateIdentityProvidingEventInterface;
 use Phauthentic\EventSourcing\Repository\AggregateData;
 use Phauthentic\EventSourcing\Repository\AggregateDataInterface;
 use Phauthentic\EventSourcing\Repository\AggregateExtractor\Exception\ExtractorException;
@@ -61,6 +62,7 @@ class ReflectionBasedExtractor implements AggregateExtractorInterface
     }
 
     /**
+     * @param ReflectionClass<object> $reflectionClass
      * @throws \Phauthentic\EventSourcing\Repository\AggregateExtractor\Exception\ExtractorException
      */
     protected function assertAggregateProperties(ReflectionClass $reflectionClass): void
@@ -71,7 +73,7 @@ class ReflectionBasedExtractor implements AggregateExtractorInterface
     }
 
     /**
-     * @param ReflectionClass $reflectionClass
+     * @param ReflectionClass<object> $reflectionClass
      * @param string $propertyName
      * @param object $object
      * @return mixed

@@ -115,15 +115,11 @@ class EventSourcedRepositoryIntegrationTest extends TestCase
         $this->assertSame($expectedDomainEventCount, $invoice->getDomainEventCount());
         $this->assertSame($expectedAggregateVersion, $invoice->getAggregateVersion());
         $this->assertSame($expectedLineItemCount, $invoice->lineItemCount());
-
-        //var_dump($this->snapshotStore);
     }
 
-    public function testEventSourcedRepositoryIntegration(): void
+    private function persistAndRestoreTheAggregateFirstTime(Invoice $invoice): Invoice
     {
-        $invoice = $this->createInvoice();
-
-        // Act: Restore teh aggregate
+        // Act: Restore the aggregate
         $this->repository->persist($invoice);
 
         $this->assertAggregateState(
@@ -133,7 +129,6 @@ class EventSourcedRepositoryIntegrationTest extends TestCase
             expectedLineItemCount: 1
         );
 
-        //dd($this->eventStore);
         // Act: Restore the aggregate
         $invoice = $this->repository->restore($this->aggregateId, Invoice::class);
 
@@ -145,6 +140,11 @@ class EventSourcedRepositoryIntegrationTest extends TestCase
             expectedLineItemCount: 1
         );
 
+        return $invoice;
+    }
+
+    private function addLineItemAndAssertAggregateState(Invoice $invoice): Invoice
+    {
         // Act: Add one more line
         $invoice->addLineItem(LineItem::create(
             sku: '456',
@@ -160,6 +160,11 @@ class EventSourcedRepositoryIntegrationTest extends TestCase
             expectedLineItemCount: 2
         );
 
+        return $invoice;
+    }
+
+    private function persistAndRestoreAggregateSecondTime(Invoice $invoice): Invoice
+    {
         // Act: Persist the aggregate and restore it
         $this->repository->persist($invoice);
         $invoice = $this->repository->restore($this->aggregateId, Invoice::class);
@@ -172,6 +177,11 @@ class EventSourcedRepositoryIntegrationTest extends TestCase
             expectedLineItemCount: 2
         );
 
+        return $invoice;
+    }
+
+    private function flagInvoiceAsPaidAndAssertState(Invoice $invoice): Invoice
+    {
         // Act: Flag as Paid
         $invoice->flagAsPaid();
 
@@ -183,6 +193,11 @@ class EventSourcedRepositoryIntegrationTest extends TestCase
             expectedLineItemCount: 2
         );
 
+        return $invoice;
+    }
+
+    private function persistAndRestoreAggregateThirdTime(Invoice $invoice): Invoice
+    {
         // Act: Persist and restore the aggregate
         $this->repository->persist($invoice);
         $invoice = $this->repository->restore($this->aggregateId, Invoice::class);
@@ -193,5 +208,17 @@ class EventSourcedRepositoryIntegrationTest extends TestCase
             expectedAggregateVersion: 4,
             expectedLineItemCount: 2
         );
+
+        return $invoice;
+    }
+
+    public function testEventSourcedRepositoryIntegration(): void
+    {
+        $invoice = $this->createInvoice();
+        $invoice = $this->persistAndRestoreTheAggregateFirstTime($invoice);
+        $invoice = $this->addLineItemAndAssertAggregateState($invoice);
+        $invoice = $this->persistAndRestoreAggregateSecondTime($invoice);
+        $invoice = $this->flagInvoiceAsPaidAndAssertState($invoice);
+        $this->persistAndRestoreAggregateThirdTime($invoice);
     }
 }
