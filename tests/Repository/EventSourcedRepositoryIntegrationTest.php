@@ -16,7 +16,6 @@ use Phauthentic\EventSourcing\Repository\AggregateFactory\AggregateFactoryInterf
 use Phauthentic\EventSourcing\Repository\AggregateFactory\ReflectionFactory;
 use Phauthentic\EventSourcing\Repository\EventSourcedRepository;
 use Phauthentic\EventSourcing\Repository\EventSourcedRepositoryInterface;
-use Phauthentic\EventSourcing\Repository\SnapshotStrategy\EveryNthVersionStrategy;
 use Phauthentic\EventSourcing\Repository\SnapshotStrategy\EveryVersionStrategy;
 use Phauthentic\EventStore\EventFactory;
 use Phauthentic\EventStore\EventFactoryInterface;
