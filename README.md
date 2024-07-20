@@ -1,18 +1,10 @@
 # Phauthentic Event Sourcing Library
 
-**⚠ Do not use it in production! This is still in development! ⚠**
-
 A framework-agnostic event sourcing system.
 
-Consider this library a framework to create your own flavor of event sourcing within your application. The library tries to provide different styles and flavors that you can freely combine to implement event sourcing in your application.
+The library tries to be as unopinionated as possible, it provides the basic building blocks to implement event sourcing in your application. The library will allow you to keep 3rd party dependencies to a minimum and will not force you to use a specific framework or library. Your aggregates can be free of third party dependencies if you want to go for that style. 
 
-We consider the repository the main element in the system that connects the extraction of events from the actual aggregate the persistence of the aggregate taking snapshots and emitting events.
-
-It features different ways of extracting information from your aggregates, pick your flavor:
-
-* Via Attributes
-* Via Interfaces
-* Via Reflection
+It features different ways of extracting information from your aggregates, pick your flavor: Via Attributes (recommended), Interfaces or Reflection. Using a reflection based extractor will allow you to keep your aggregates free of any dependency to this library.
 
 ## Installation
 
