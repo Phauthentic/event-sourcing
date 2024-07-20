@@ -3,7 +3,7 @@
 
 declare(strict_types=1);
 
-namespace Phauthentic\EventSourcing\Test\Aggregate\DomainEvent;
+namespace Phauthentic\EventSourcing\Test\Unit\Aggregate\DomainEvent;
 
 use Phauthentic\EventSourcing\DomainEvent\AggregateIdentityProvidingEventInterface;
 use Phauthentic\EventSourcing\DomainEvent\AggregateVersionProvidingEvent;

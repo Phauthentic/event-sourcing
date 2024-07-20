@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Phauthentic\EventSourcing\Test\Repository;
+namespace Phauthentic\EventSourcing\Test\Unit\Repository;
 
 use Example\Domain\Invoice\Address;
 use Example\Domain\Invoice\Event\InvoiceCreated;
@@ -16,7 +16,6 @@ use Phauthentic\EventSourcing\Repository\AggregateFactory\AggregateFactoryInterf
 use Phauthentic\EventSourcing\Repository\AggregateFactory\ReflectionFactory;
 use Phauthentic\EventSourcing\Repository\EventSourcedRepository;
 use Phauthentic\EventSourcing\Repository\EventSourcedRepositoryInterface;
-use Phauthentic\EventSourcing\Repository\SnapshotStrategy\EveryNthVersionStrategy;
 use Phauthentic\EventSourcing\Repository\SnapshotStrategy\EveryVersionStrategy;
 use Phauthentic\EventStore\EventFactory;
 use Phauthentic\EventStore\EventFactoryInterface;
@@ -24,8 +23,8 @@ use Phauthentic\EventStore\EventStoreInterface;
 use Phauthentic\EventStore\InMemoryEventStore;
 use Phauthentic\SnapshotStore\SnapshotFactory;
 use Phauthentic\SnapshotStore\SnapshotFactoryInterface;
-use Phauthentic\SnapshotStore\Store\SnapshotStoreInterface;
 use Phauthentic\SnapshotStore\Store\InMemorySnapshotStore;
+use Phauthentic\SnapshotStore\Store\SnapshotStoreInterface;
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
 

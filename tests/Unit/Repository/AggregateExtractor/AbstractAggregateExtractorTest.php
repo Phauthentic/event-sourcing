@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Phauthentic\EventSourcing\Test\Repository\AggregateExtractor;
+namespace Phauthentic\EventSourcing\Test\Unit\Repository\AggregateExtractor;
 
 use Example\Domain\Invoice\Address;
 use Example\Domain\Invoice\Invoice;
