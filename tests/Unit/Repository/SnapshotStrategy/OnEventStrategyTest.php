@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Phauthentic\EventSourcing\Test\Repository\SnapshotStrategy;
+namespace Phauthentic\EventSourcing\Test\Unit\Repository\SnapshotStrategy;
 
-use Phauthentic\EventSourcing\Test\Aggregate\TestEvent;
-use Phauthentic\EventSourcing\Test\Aggregate\TestEvent2;
-use PHPUnit\Framework\TestCase;
-use Phauthentic\EventSourcing\Repository\SnapshotStrategy\OnEventStrategy;
 use Phauthentic\EventSourcing\Repository\AggregateDataInterface;
+use Phauthentic\EventSourcing\Repository\SnapshotStrategy\OnEventStrategy;
+use Phauthentic\EventSourcing\Test\Unit\Aggregate\TestEvent;
+use Phauthentic\EventSourcing\Test\Unit\Aggregate\TestEvent2;
+use PHPUnit\Framework\TestCase;
 
 /**
  *

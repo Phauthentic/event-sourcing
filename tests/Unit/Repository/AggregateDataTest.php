@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Phauthentic\EventSourcing\Test\Repository;
+namespace Phauthentic\EventSourcing\Test\Unit\Repository;
 
 use Phauthentic\EventSourcing\Repository\AggregateData;
 use PHPUnit\Framework\TestCase;

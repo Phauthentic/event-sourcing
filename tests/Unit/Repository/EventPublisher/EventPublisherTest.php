@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Phauthentic\EventSourcing\Test\Repository\EventPublisher;
+namespace Phauthentic\EventSourcing\Test\Unit\Repository\EventPublisher;
 
 use Phauthentic\EventSourcing\Repository\EventPublisher\EventPublisher;
 use Phauthentic\EventSourcing\Repository\EventPublisher\EventPublisherMiddlewareInterface;
