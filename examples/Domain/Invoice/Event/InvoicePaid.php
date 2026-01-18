@@ -11,18 +11,16 @@ class InvoicePaid
 {
     private function __construct(
         private string $invoiceId,
-    )
-    {
+    ) {
     }
 
     public static function create(
         string $invoiceId
-    )
-    {
+    ): self {
         return new self($invoiceId);
     }
 
-    public function getInvoiceId()
+    public function getInvoiceId(): string
     {
         return $this->invoiceId;
     }

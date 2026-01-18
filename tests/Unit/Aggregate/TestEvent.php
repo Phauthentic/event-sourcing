@@ -13,7 +13,7 @@ class TestEvent
     {
     }
 
-    public function getText()
+    public function getText(): string
     {
         return $this->text;
     }

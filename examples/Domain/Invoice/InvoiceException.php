@@ -18,4 +18,3 @@ class InvoiceException extends RuntimeException
         return new self('The invoice is already paid!');
     }
 }
-

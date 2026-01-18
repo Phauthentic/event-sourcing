@@ -15,7 +15,7 @@ class InvoiceId
     {
     }
 
-    public static function fromString(string $id)
+    public static function fromString(string $id): self
     {
         $that = new self();
         $that->id = $id;
