@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Phauthentic\EventSourcing\Test\Repository\AggregateExtractor;
+namespace Phauthentic\EventSourcing\Test\Unit\Repository\AggregateExtractor;
 
-use PHPUnit\Framework\TestCase;
 use Phauthentic\EventSourcing\Repository\AggregateData;
 use Phauthentic\EventSourcing\Repository\AggregateExtractor\Exception\ExtractorException;
 use Phauthentic\EventSourcing\Repository\AggregateExtractor\InterfaceBasedExtractor;
+use PHPUnit\Framework\TestCase;
 
 /**
  *

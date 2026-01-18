@@ -29,6 +29,10 @@ all:
 	@echo "Running CS-Fixer, CS-Checker, Static Analyser and Tests"
 	docker compose run php composer all
 
+benchmark:
+	@echo "Running phpbench"
+	docker compose run php composer benchmark
+
 shell:
 	@echo "Running shell"
 	docker compose run --service-ports --entrypoint /bin/bash php

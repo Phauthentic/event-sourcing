@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Phauthentic\EventSourcing\Test\Repository\SnapshotStrategy;
+namespace Phauthentic\EventSourcing\Test\Unit\Repository\SnapshotStrategy;
 
-use PHPUnit\Framework\TestCase;
-use Phauthentic\EventSourcing\Repository\SnapshotStrategy\EveryNthVersionStrategy;
 use Phauthentic\EventSourcing\Repository\AggregateDataInterface;
+use Phauthentic\EventSourcing\Repository\SnapshotStrategy\EveryNthVersionStrategy;
+use PHPUnit\Framework\TestCase;
 
 /**
  *

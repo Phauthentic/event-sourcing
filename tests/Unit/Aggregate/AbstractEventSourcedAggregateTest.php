@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Phauthentic\EventSourcing\Test\Aggregate;
+namespace Phauthentic\EventSourcing\Test\Unit\Aggregate;
 
 use DateTimeImmutable;
 use Generator;
-use Phauthentic\EventStore\Event;
-use PHPUnit\Framework\TestCase;
 use Phauthentic\EventSourcing\Aggregate\Exception\AggregateEventVersionMismatchException;
 use Phauthentic\EventSourcing\Aggregate\Exception\EventMismatchException;
 use Phauthentic\EventSourcing\Aggregate\Exception\MissingEventHandlerException;
+use Phauthentic\EventStore\Event;
+use PHPUnit\Framework\TestCase;
 
 /**
  *
@@ -134,7 +134,7 @@ class AbstractEventSourcedAggregateTest extends TestCase
     {
         $this->expectException(MissingEventHandlerException::class);
         // phpcs:ignore
-        $this->expectExceptionMessage('Handler method `whenMissingEventHandlerEvent` for event `Phauthentic\EventSourcing\Test\Aggregate\MissingEventHandlerEvent` does not exist in aggregate `Phauthentic\EventSourcing\Test\Aggregate\ConcreteAggregate`');
+        $this->expectExceptionMessage('Handler method `whenMissingEventHandlerEvent` for event `Phauthentic\EventSourcing\Test\Unit\Aggregate\MissingEventHandlerEvent` does not exist in aggregate `Phauthentic\EventSourcing\Test\Unit\Aggregate\ConcreteAggregate`');
 
         $event = new Event(
             aggregateId: 'test-id',

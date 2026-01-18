@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Phauthentic\EventSourcing\Test\Aggregate;
+namespace Phauthentic\EventSourcing\Test\Unit\Aggregate;
 
 use Phauthentic\EventSourcing\Aggregate\AbstractEventSourcedAggregate;
 use Phauthentic\EventSourcing\Aggregate\Attribute\DomainEvents;
