@@ -8,13 +8,17 @@ Persistence is done via so-called aggregate extractors. Extractors get the infor
 
 From the perspective of the library it doesn't matter much how you implement the recording of the events. But the events must be somehow recorded, ideally in a property of the aggregate. The library provides different ways of extracting the information from the aggregate.
 
+**Important**: The `consumeAggregateEvents()` method (required by `EventSourcedAggregateInterface`) returns all recorded events and clears the internal event storage. This ensures events are not processed multiple times. When using `AbstractEventSourcedAggregate`, this method is automatically implemented for you.
+
 ### For restoring the State of an Aggregate
 
 An aggregate **must** provide a way to restore its state from a list of events.
 
-The library provides an abstract class [AbstractEventSourcedAggregate](../src/Aggregate/AbstractEventSourcedAggregate.php) that you can extend to implement the event sourcing in your aggregate.
+The library provides an abstract class [AbstractEventSourcedAggregate](../src/Aggregate/AbstractEventSourcedAggregate.php) that you can extend to implement the event sourcing in your aggregate. This class implements the `EventSourcedAggregateInterface`, providing the required `getAggregateId()` and `consumeAggregateEvents()` methods.
 
 The class has a method `applyEventsFromHistory()` that takes the events and will reconstitute the state of the aggregate from them by calling a different methods per event type. By default it is prefixed with `when` and followed by the event type. For example `UserCreated` becomes `whenUserCreated`. It will throw an exception if your aggregate is missing such a method and tell you which one is missing.
+
+When extending `AbstractEventSourcedAggregate`, you can use either the class-level `EventSourcedAggregate` attribute or individual property attributes (`AggregateIdentifier`, `AggregateVersion`, `DomainEvents`) to mark your aggregate properties for extraction.
 
 ## Using Reflections only - the most pure flavor
 
@@ -53,7 +57,7 @@ Your aggregate must have at least three properties. How you name them is up to y
 - `domainEvents` - The list of domain events that have been applied to the aggregate.
 - `aggregateType` - **(OPTIONAL)** The type of the aggregate. If not provided, the class name will be used.
 
-Note that you **MUST** use the [AttributeExtractor](../src/Repository/AggregateExtractor/AttributeBasedExtractor.php) to extract the data from the aggregate.
+Note that you **MUST** use the [AttributeBasedExtractor](../src/Repository/AggregateExtractor/AttributeBasedExtractor.php) to extract the data from the aggregate.
 
 ```php
 use Phauthentic\EventSourcing\Aggregate\Attribute\EventSourcedAggregate;
@@ -74,6 +78,43 @@ class MyAggregate
     /* ... */
 }
 ```
+
+## Using Individual Property Attributes
+
+Alternatively, you can use individual property attributes instead of a single class-level attribute. This approach provides more granular control and better readability.
+
+Mark your aggregate properties with the appropriate attributes:
+
+- `#[AggregateIdentifier]` - Marks the property containing the aggregate ID
+- `#[AggregateVersion]` - Marks the property containing the aggregate version
+- `#[DomainEvents]` - Marks the property containing the domain events array
+- `#[AggregateType]` - **(OPTIONAL)** Marks the property containing the aggregate type
+
+```php
+use Phauthentic\EventSourcing\Aggregate\Attribute\AggregateIdentifier;
+use Phauthentic\EventSourcing\Aggregate\Attribute\AggregateVersion;
+use Phauthentic\EventSourcing\Aggregate\Attribute\DomainEvents;
+use Phauthentic\EventSourcing\Aggregate\Attribute\AggregateType;
+
+class MyAggregate
+{
+    #[AggregateIdentifier]
+    private string $id;
+
+    #[AggregateVersion]
+    private int $aggregateVersion = 0;
+
+    #[DomainEvents]
+    private array $domainEvents = [];
+
+    #[AggregateType]
+    private string $aggregateType = 'my-aggregate';
+
+    /* ... */
+}
+```
+
+Note that you **MUST** use the [AttributeBasedExtractor](../src/Repository/AggregateExtractor/AttributeBasedExtractor.php) to extract the data from the aggregate when using individual property attributes.
 
 ## Interface Based
 
