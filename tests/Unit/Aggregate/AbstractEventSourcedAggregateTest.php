@@ -176,4 +176,29 @@ class AbstractEventSourcedAggregateTest extends TestCase
 
         $this->aggregate->applyEventsFromHistory($events);
     }
+
+    public function testApplyEventWithWrongVersion(): void
+    {
+        // First apply a correct event to set version to 1
+        $event1 = new Event(
+            aggregateId: 'test-id',
+            aggregateVersion: 1,
+            event: 'TestEvent',
+            payload: new TestEvent('test1'),
+            createdAt: new DateTimeImmutable()
+        );
+        $this->aggregate->applyEventsFromHistory([$event1]);
+
+        // Now try to apply an event with version 3 (skipping version 2)
+        $event2 = new Event(
+            aggregateId: 'test-id',
+            aggregateVersion: 3,
+            event: 'TestEvent',
+            payload: new TestEvent('test2'),
+            createdAt: new DateTimeImmutable()
+        );
+
+        $this->expectException(AggregateEventVersionMismatchException::class);
+        $this->aggregate->applyEventsFromHistory([$event2]);
+    }
 }

@@ -46,7 +46,6 @@ class EventSourcedRepositoryIntegrationTest extends TestCase
 
     public function setUp(): void
     {
-        parent::setUp();
 
         $this->snapshotStore = new InMemorySnapshotStore();
         $this->eventStore = new InMemoryEventStore();
