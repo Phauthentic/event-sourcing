@@ -31,7 +31,7 @@ class EveryNthVersionStrategyTest extends TestCase
     /**
      * @return array<string, array<mixed>>
      */
-    public function versionDataProvider(): array
+    public static function versionDataProvider(): array
     {
         return [
             'Default modulus, applicable version' => [5, 10, true],
