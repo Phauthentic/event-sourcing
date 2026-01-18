@@ -85,7 +85,7 @@ class AttributeBasedExtractor implements AggregateExtractorInterface
 
         if (empty($attributes)) {
             throw new ExtractorException(sprintf(
-                'Attribute `%s` found in `%s`',
+                'Attribute `%s` not found in `%s`',
                 EventSourcedAggregate::class,
                 $reflectionClass->getName()
             ));
@@ -168,7 +168,7 @@ class AttributeBasedExtractor implements AggregateExtractorInterface
 
         if (!is_array($value)) {
             throw new ExtractorException(sprintf(
-                'The version property must be an integer, `%s` given.',
+                'The domain events property must be an array, `%s` given.',
                 gettype($value)
             ));
         }
@@ -213,8 +213,8 @@ class AttributeBasedExtractor implements AggregateExtractorInterface
     }
 
     /**
-     * @param $property
-     * @param $attribute
+     * @param ReflectionProperty $property
+     * @param string $attribute
      * @return bool
      */
     protected function propertyHasAttribute(ReflectionProperty $property, string $attribute): bool
@@ -223,9 +223,10 @@ class AttributeBasedExtractor implements AggregateExtractorInterface
     }
 
     /**
-     * @param $property
-     * @param $attribute
-     * @return mixed
+     * @param ReflectionProperty $property
+     * @param string $attribute
+     * @param object $object
+     * @return mixed|null
      */
     protected function getValueFromAttribute(ReflectionProperty $property, string $attribute, object $object): mixed
     {

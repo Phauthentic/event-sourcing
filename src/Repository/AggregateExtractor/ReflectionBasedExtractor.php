@@ -25,8 +25,8 @@ class ReflectionBasedExtractor implements AggregateExtractorInterface
 
     public function __construct(
         protected string $aggregateEventProperty = self::AGGREGATE_EVENTS_PROPERTY,
-        protected string $aggregateVersionProperty = self::AGGREGATE_IDENTIFIER_PROPERTY,
-        protected string $aggregateIdentifierProperty = self::AGGREGATE_VERSION_PROPERTY,
+        protected string $aggregateVersionProperty = self::AGGREGATE_VERSION_PROPERTY,
+        protected string $aggregateIdentifierProperty = self::AGGREGATE_IDENTIFIER_PROPERTY,
     ) {
     }
 
@@ -107,7 +107,7 @@ class ReflectionBasedExtractor implements AggregateExtractorInterface
     {
         return (string)$this->getPropertyFromAggregate(
             $reflectionClass,
-            $this->aggregateVersionProperty,
+            $this->aggregateIdentifierProperty,
             $aggregate
         );
     }
@@ -116,7 +116,7 @@ class ReflectionBasedExtractor implements AggregateExtractorInterface
     {
         return (int)$this->getPropertyFromAggregate(
             $reflectionClass,
-            $this->aggregateIdentifierProperty,
+            $this->aggregateVersionProperty,
             $aggregate
         );
     }

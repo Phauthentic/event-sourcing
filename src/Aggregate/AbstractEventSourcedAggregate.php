@@ -17,9 +17,13 @@ use ReflectionClass;
 use ReflectionProperty;
 
 /**
+ * Base class for event-sourced aggregates.
  *
+ * This class provides the core functionality for recording and applying domain events.
+ * Version increments occur only when events are applied (not when recorded), ensuring
+ * proper event ordering and preventing double counting.
  */
-abstract class AbstractEventSourcedAggregate
+abstract class AbstractEventSourcedAggregate implements EventSourcedAggregateInterface
 {
     protected string $aggregateId = '';
 
@@ -37,7 +41,10 @@ abstract class AbstractEventSourcedAggregate
     protected const EVENT_METHOD_SUFFIX = '';
 
     /**
-     * Applies and records the event
+     * Records an event for later persistence without applying it to the aggregate state.
+     *
+     * The event is stored in the aggregate's event collection but the aggregate version
+     * is not incremented. Version increments occur only when events are applied via applyEvent().
      *
      * @param object $event
      * @return void
@@ -45,6 +52,10 @@ abstract class AbstractEventSourcedAggregate
      */
     protected function recordThat(object $event): void
     {
+        if (empty($this->aggregateId)) {
+            throw new AggregateException('Aggregate ID must be set before recording events');
+        }
+
         $reflectionClass = new ReflectionClass($this);
         $domainEventsProperty = $this->findDomainEventsProperty($reflectionClass);
 
@@ -124,9 +135,14 @@ abstract class AbstractEventSourcedAggregate
     }
 
     /**
+     * Applies a domain event to the aggregate, updating its state and incrementing the version.
+     *
+     * This method calls the appropriate event handler method and increments the aggregate version.
+     * It should only be called when applying historical events during aggregate reconstruction.
+     *
      * @param object $event
      * @return void
-     * @throws EventMismatchException|MissingEventHandlerException
+     * @throws EventMismatchException|MissingEventHandlerException|AggregateException
      */
     protected function applyEvent(object $event): void
     {
@@ -135,7 +151,13 @@ abstract class AbstractEventSourcedAggregate
         $this->assertEventHandlerExists($event, $eventName);
         $this->assertEventMatchesAggregate($event);
 
+        $originalAggregateId = $this->aggregateId;
         $this->{$eventName}($event);
+
+        if ($this->aggregateId !== $originalAggregateId) {
+            throw new AggregateException('Event handler must not modify the aggregate ID');
+        }
+
         $this->aggregateVersion++;
     }
 
@@ -169,5 +191,33 @@ abstract class AbstractEventSourcedAggregate
             $this->aggregateVersion,
             $eventVersion
         );
+    }
+
+    /**
+     * Returns the ID of the aggregate as string
+     */
+    public function getAggregateId(): string
+    {
+        return $this->aggregateId;
+    }
+
+    /**
+     * Returns a list of events and resets the events to an empty list
+     *
+     * @return array<int, object>
+     */
+    public function consumeAggregateEvents(): array
+    {
+        $reflectionClass = new ReflectionClass($this);
+        $domainEventsProperty = $this->findDomainEventsProperty($reflectionClass);
+
+        if ($domainEventsProperty->isPrivate()) {
+            $domainEventsProperty->setAccessible(true);
+        }
+
+        $events = $domainEventsProperty->getValue($this);
+        $domainEventsProperty->setValue($this, []);
+
+        return $events;
     }
 }

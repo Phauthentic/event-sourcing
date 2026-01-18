@@ -42,12 +42,6 @@ class ConcreteAggregate extends AbstractEventSourcedAggregate
         $this->recordThat(new TestEvent($data));
     }
 
-    /** @return array<object> */
-    public function getAggregateEvents(): array
-    {
-        return $this->aggregateEvents;
-    }
-
     public function getAggregateVersion(): int
     {
         return $this->aggregateVersion;

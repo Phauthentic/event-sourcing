@@ -44,11 +44,6 @@ readonly class ReflectionFactory implements AggregateFactoryInterface
         }
 
         $this->assertAggregateHasMethod($aggregate);
-        /*
-        foreach ($events as $event) {
-            //var_dump($event);
-        }
-        */
         $aggregate->{$this->applyEventsMethodName}($events);
 
         return $aggregate;
