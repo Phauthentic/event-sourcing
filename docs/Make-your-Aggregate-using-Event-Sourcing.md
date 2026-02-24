@@ -16,7 +16,7 @@ An aggregate **must** provide a way to restore its state from a list of events.
 
 The library provides an abstract class [AbstractEventSourcedAggregate](../src/Aggregate/AbstractEventSourcedAggregate.php) that you can extend to implement the event sourcing in your aggregate. This class implements the `EventSourcedAggregateInterface`, providing the required `getAggregateId()` and `consumeAggregateEvents()` methods.
 
-The class has a method `applyEventsFromHistory()` that takes the events and will reconstitute the state of the aggregate from them by calling a different methods per event type. By default it is prefixed with `when` and followed by the event type. For example `UserCreated` becomes `whenUserCreated`. It will throw an exception if your aggregate is missing such a method and tell you which one is missing.
+The class has a method `applyEventsFromHistory()` that takes the events and will reconstitute the state of the aggregate from them by calling a different method per event type. By default it is prefixed with `when` and followed by the event type. For example `UserCreated` becomes `whenUserCreated`. It will throw an exception if your aggregate is missing such a method and tell you which one is missing.
 
 When extending `AbstractEventSourcedAggregate`, you can use either the class-level `EventSourcedAggregate` attribute or individual property attributes (`AggregateIdentifier`, `AggregateVersion`, `DomainEvents`) to mark your aggregate properties for extraction.
 
@@ -33,9 +33,9 @@ You just have to configure the extractor to read the right properties from your 
 ```php
 class MyAggregate 
 {
-    private string $id;
+    private string $aggregateId;
     private int $aggregateVersion = 0;
-    private array $domainEvents = [];
+    private array $aggregateEvents = [];
     private string $aggregateType = 'my-aggregate';
     
     /* ... */

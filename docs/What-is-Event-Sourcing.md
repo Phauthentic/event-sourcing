@@ -6,7 +6,7 @@ This approach provides a comprehensive audit trail of all changes, enabling trac
 
 ## When to NOT use it
 
-Event sourcing comes with additional complexity. You should **not** use event sourcing when you don't need it. It is a powerful tool, but it is not a silver bullet. It is not a one-size-fits-all solution. Event sourcing is a good solution for scenarious like audit logging, undo/redo functionality, and complex business rules.
+Event sourcing comes with additional complexity. You should **not** use event sourcing when you don't need it. It is a powerful tool, but it is not a silver bullet. It is not a one-size-fits-all solution. Event sourcing is a good solution for scenarios like audit logging, undo/redo functionality, and complex business rules.
 
 | Quality Attribute         | Use Event Sourcing                                 | Don't Use Event Sourcing                             |
 |---------------------------|----------------------------------------------------|------------------------------------------------------|
