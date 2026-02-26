@@ -64,4 +64,32 @@ class InterfaceBasedExtractorTest extends TestCase
         $this->expectException(ExtractorException::class);
         $this->extractor->extract($invalidAggregate);
     }
+
+    public function testExtractWithNonTypeProvidingAggregate(): void
+    {
+        // Create an aggregate that implements EventSourcedAggregateInterface but not TypeProvidingAggregateInterface
+        $aggregate = new class implements \Phauthentic\EventSourcing\Aggregate\EventSourcedAggregateInterface {
+            public function getAggregateId(): string
+            {
+                return '789';
+            }
+            public function getAggregateVersion(): int
+            {
+                return 3;
+            }
+            public function consumeAggregateEvents(): array
+            {
+                return [];
+            }
+        };
+
+        $result = $this->extractor->extract($aggregate);
+
+        $this->assertInstanceOf(AggregateData::class, $result);
+        $this->assertEquals('789', $result->getAggregateId());
+        $this->assertEquals(3, $result->getAggregateVersion());
+        $this->assertEquals([], $result->getDomainEvents());
+        // Should use get_class() as fallback for type
+        $this->assertStringContainsString('InterfaceBasedExtractorTest', $result->getAggregateType());
+    }
 }

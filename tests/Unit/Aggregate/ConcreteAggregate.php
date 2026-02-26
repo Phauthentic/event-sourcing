@@ -32,7 +32,7 @@ class ConcreteAggregate extends AbstractEventSourcedAggregate
         $this->testProperty = $event->getText();
     }
 
-    public function whenIdentityProvidingTestEvent(IdentityProvidingTestEvent $event)
+    public function whenIdentityProvidingTestEvent(IdentityProvidingTestEvent $event): void
     {
         $this->testProperty = $event->getText();
     }
@@ -40,11 +40,6 @@ class ConcreteAggregate extends AbstractEventSourcedAggregate
     public function doSomething(string $data): void
     {
         $this->recordThat(new TestEvent($data));
-    }
-
-    public function getAggregateEvents(): array
-    {
-        return $this->aggregateEvents;
     }
 
     public function getAggregateVersion(): int

@@ -1,5 +1,17 @@
 <?php
 
+/**
+ * Copyright (c) Florian Krämer (https://florian-kraemer.net)
+ * Licensed under The MIT License
+ * For full copyright and license information, please see the LICENSE file
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright Copyright (c) Florian Krämer (https://florian-kraemer.net)
+ * @author    Florian Krämer
+ * @link      https://github.com/Phauthentic
+ * @license   https://opensource.org/licenses/MIT MIT License
+ */
+
 declare(strict_types=1);
 
 namespace Phauthentic\EventSourcing\Repository\AggregateExtractor;
@@ -25,8 +37,8 @@ class ReflectionBasedExtractor implements AggregateExtractorInterface
 
     public function __construct(
         protected string $aggregateEventProperty = self::AGGREGATE_EVENTS_PROPERTY,
-        protected string $aggregateVersionProperty = self::AGGREGATE_IDENTIFIER_PROPERTY,
-        protected string $aggregateIdentifierProperty = self::AGGREGATE_VERSION_PROPERTY,
+        protected string $aggregateVersionProperty = self::AGGREGATE_VERSION_PROPERTY,
+        protected string $aggregateIdentifierProperty = self::AGGREGATE_IDENTIFIER_PROPERTY,
     ) {
     }
 
@@ -107,7 +119,7 @@ class ReflectionBasedExtractor implements AggregateExtractorInterface
     {
         return (string)$this->getPropertyFromAggregate(
             $reflectionClass,
-            $this->aggregateVersionProperty,
+            $this->aggregateIdentifierProperty,
             $aggregate
         );
     }
@@ -116,7 +128,7 @@ class ReflectionBasedExtractor implements AggregateExtractorInterface
     {
         return (int)$this->getPropertyFromAggregate(
             $reflectionClass,
-            $this->aggregateIdentifierProperty,
+            $this->aggregateVersionProperty,
             $aggregate
         );
     }
@@ -155,10 +167,11 @@ class ReflectionBasedExtractor implements AggregateExtractorInterface
         }
 
         return new AggregateData(
-            $aggregateId,
-            get_class($aggregate),
-            $aggregateVersion,
-            $storeEvents
+            aggregateId: $aggregateId,
+            aggregateType: get_class($aggregate),
+            version: $aggregateVersion,
+            events: $storeEvents,
+            stream: get_class($aggregate)
         );
     }
 }

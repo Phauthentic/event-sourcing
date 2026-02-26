@@ -9,7 +9,7 @@ The driving quality attributes of this library are:
 * **Simplicity**: The code should be as minimal as possible and as decoupled as possible from any domain and framework.
 * **Flexibility**: The library should be flexible enough to be used in a variety of scenarios.
 * **Extensibility**: The library should be easy to extend.
-* **Learnability**: The library should be easy to learn and getting started.
+* **Learnability**: The library should be easy to learn and get started.
 
 This means that the library tries to minimize 3rd party dependencies as much as possible. "Plain old PHP" objects are used as much as possible without relying on further abstraction and 3rd parties. We believe that this makes the library more robust and easier to understand.
 
@@ -17,8 +17,6 @@ Other libraries may provide more features, but this library aims to provide a so
 
 > *Delete any part or process you can. You may have to add them back later. In fact, if you do not end up adding back at least 10 percent of them, then you didn't delete enough.* 
 > -- Elon Musk
-
-![Simplicity vs Complexity](images/raptor-v1-vs-v2.jpg)
 
 ## Ubiquitous Language
 
@@ -56,14 +54,14 @@ An event publisher is responsible for publishing domain events. It is used to pu
 
 The diagram shows the different composer packages and their dependencies. Note that the library does not depend on any 3rd party libraries.
 
-![Overview Diagram](diagrams/Package-Diagram.svg)
+![Package Diagram](diagrams/Package-Diagram.svg)
 
 ### Flow Diagram
 
 The diagram shows the flow of the data through the different components of the library.
 
-![Overview Diagram](diagrams/Flow-Diagram.svg)
+![Flow Diagram](diagrams/Flow-Diagram.svg)
 
 ### Entity Diagram
 
-![Overview Diagram](diagrams/Entity-Diagram.svg)
+![Entity Diagram](diagrams/Entity-Diagram.svg)

@@ -30,6 +30,7 @@ final class Invoice extends AbstractEventSourcedAggregate
     #[DomainEvents]
     protected array $aggregateEvents = [];
 
+    /** @var array<LineItem> */
     private array $lineItems = [];
 
     private bool $paid = false;
@@ -58,6 +59,7 @@ final class Invoice extends AbstractEventSourcedAggregate
         }
     }
 
+    /** @param array<LineItem> $lineItems */
     public static function create(
         InvoiceId $invoiceId,
         Address $address,

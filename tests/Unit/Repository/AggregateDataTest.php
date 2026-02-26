@@ -13,7 +13,7 @@ use stdClass;
  */
 class AggregateDataTest extends TestCase
 {
-    public function testConstructorAndGetters()
+    public function testConstructorAndGetters(): void
     {
         $aggregateId = 'test-id';
         $aggregateType = 'TestType';
@@ -30,7 +30,7 @@ class AggregateDataTest extends TestCase
         $this->assertSame($stream, $aggregateData->getStream());
     }
 
-    public function testConstructorWithDefaults()
+    public function testConstructorWithDefaults(): void
     {
         $aggregateId = 'test-id';
         $aggregateType = 'TestType';
@@ -45,7 +45,7 @@ class AggregateDataTest extends TestCase
         $this->assertNull($aggregateData->getStream());
     }
 
-    public function testCreateFromArray()
+    public function testCreateFromArray(): void
     {
         $data = [
             'aggregateId' => 'test-id',
@@ -65,7 +65,7 @@ class AggregateDataTest extends TestCase
         $this->assertSame($data['stream'], $aggregateData->getStream());
     }
 
-    public function testCreateFromArrayWithDefaults()
+    public function testCreateFromArrayWithDefaults(): void
     {
         $data = [
             'aggregateId' => 'test-id',

@@ -46,7 +46,6 @@ class EventSourcedRepositoryIntegrationTest extends TestCase
 
     public function setUp(): void
     {
-        parent::setUp();
 
         $this->snapshotStore = new InMemorySnapshotStore();
         $this->eventStore = new InMemoryEventStore();
@@ -110,7 +109,7 @@ class EventSourcedRepositoryIntegrationTest extends TestCase
         int $expectedDomainEventCount,
         int $expectedAggregateVersion,
         int $expectedLineItemCount
-    ) {
+    ): void {
         $this->assertSame($expectedDomainEventCount, $invoice->getDomainEventCount());
         $this->assertSame($expectedAggregateVersion, $invoice->getAggregateVersion());
         $this->assertSame($expectedLineItemCount, $invoice->lineItemCount());
@@ -129,6 +128,7 @@ class EventSourcedRepositoryIntegrationTest extends TestCase
         );
 
         // Act: Restore the aggregate
+        /** @var Invoice $invoice */
         $invoice = $this->repository->restore($this->aggregateId, Invoice::class);
 
         // Assert
@@ -166,6 +166,7 @@ class EventSourcedRepositoryIntegrationTest extends TestCase
     {
         // Act: Persist the aggregate and restore it
         $this->repository->persist($invoice);
+        /** @var Invoice $invoice */
         $invoice = $this->repository->restore($this->aggregateId, Invoice::class);
 
         // Check that after restoring, the aggregates properties are still the same
@@ -199,6 +200,7 @@ class EventSourcedRepositoryIntegrationTest extends TestCase
     {
         // Act: Persist and restore the aggregate
         $this->repository->persist($invoice);
+        /** @var Invoice $invoice */
         $invoice = $this->repository->restore($this->aggregateId, Invoice::class);
 
         $this->assertAggregateState(

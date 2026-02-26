@@ -102,7 +102,7 @@ class EventStoryBenchmark
         $this->createInvoice($repository);
     }
 
-    protected function createInvoice(EventSourcedRepository $repository)
+    protected function createInvoice(EventSourcedRepository $repository): void
     {
         $invoice = Invoice::create(
             InvoiceId::fromString($this->aggregateId),
@@ -119,10 +119,12 @@ class EventStoryBenchmark
                 )
             ]
         );
+        assert($invoice instanceof Invoice);
 
         $repository->persist($invoice);
 
         for ($i = 0; $i < 1000; $i++) {
+            // @phpstan-ignore-next-line
             $invoice->addLineItem(
                 LineItem::create(
                     sku: 'beer-' . $i,
