@@ -167,10 +167,11 @@ class ReflectionBasedExtractor implements AggregateExtractorInterface
         }
 
         return new AggregateData(
-            $aggregateId,
-            get_class($aggregate),
-            $aggregateVersion,
-            $storeEvents
+            aggregateId: $aggregateId,
+            aggregateType: get_class($aggregate),
+            version: $aggregateVersion,
+            events: $storeEvents,
+            stream: get_class($aggregate)
         );
     }
 }

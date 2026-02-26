@@ -51,7 +51,8 @@ class AttributeBasedExtractor implements AggregateExtractorInterface
             aggregateId: $aggregateId,
             aggregateType: $aggregateType,
             version: $aggregateVersion,
-            events: $aggregateEvents
+            events: $aggregateEvents,
+            stream: $aggregateType
         );
     }
 
@@ -133,7 +134,8 @@ class AttributeBasedExtractor implements AggregateExtractorInterface
                 ->getValue($aggregate),
             events: $reflectionClass
                 ->getProperty($aggregateAttribute->domainEventProperty)
-                ->getValue($aggregate)
+                ->getValue($aggregate),
+            stream: $aggregateType
         );
     }
 
